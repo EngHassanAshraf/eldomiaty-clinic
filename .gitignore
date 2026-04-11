@@ -26,3 +26,10 @@ tsconfig.tsbuildinfo
 
 # Vercel
 .vercel
+
+# Kiro IDE
+.kiro/
+
+# 
+.kiro/
+.vscode/
