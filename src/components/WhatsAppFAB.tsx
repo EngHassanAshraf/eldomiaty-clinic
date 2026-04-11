@@ -1,0 +1,18 @@
+import { MessageCircle } from "lucide-react";
+import { CLINIC } from "@/lib/data";
+
+export default function WhatsAppFAB() {
+  return (
+    <a
+      href={CLINIC.whatsappLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="احجز موعد عبر واتساب"
+      className="hidden md:flex fixed bottom-6 left-6 z-50 w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg items-center justify-center hover:scale-110 transition-all duration-200"
+      style={{ boxShadow: "0 8px 32px rgba(16,185,129,0.35)" }}
+    >
+      <MessageCircle size={26} />
+      <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#e8294a] rounded-full border-2 border-white animate-pulse" />
+    </a>
+  );
+}
