@@ -1,0 +1,74 @@
+# ============================================================
+# Security headers
+# ============================================================
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# ============================================================
+# Force HTTPS
+# ============================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ============================================================
+# 301 redirects — old pages → new anchors
+# ============================================================
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # test.html → index (duplicate page)
+  RewriteRule ^test\.html$ / [L,R=301]
+
+  # Old broken inner pages → home
+  RewriteRule ^doctors-details\.html$ / [L,R=301]
+  RewriteRule ^blog-single\.html$ / [L,R=301]
+  RewriteRule ^blog\.html$ / [L,R=301]
+  RewriteRule ^department\.html$ / [L,R=301]
+  RewriteRule ^treatment\.html$ / [L,R=301]
+  RewriteRule ^contact\.html$ /#contact [L,R=301]
+  RewriteRule ^appointment\.html$ /#contact [L,R=301]
+
+  # Block access to malware artifact files
+  RewriteRule ^img/file\.php$ - [F,L]
+  RewriteRule ^images/include\.php$ - [F,L]
+  RewriteRule ^fonts/src\.php$ - [F,L]
+  RewriteRule ^images/service\.php$ - [F,L]
+  RewriteRule ^css/css\.php$ - [F,L]
+  RewriteRule ^js/authorize\.php$ - [F,L]
+
+  # Block error_log access
+  RewriteRule ^(images|fonts)/error_log$ - [F,L]
+
+  # Block .z backup files
+  RewriteRule \.z$ - [F,L]
+</IfModule>
+
+# ============================================================
+# Cache control
+# ============================================================
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
+
+# ============================================================
+# Gzip compression
+# ============================================================
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json
+</IfModule>
