@@ -4,15 +4,15 @@ export type Locale = "ar" | "en";
 
 export const STATS_I18N = [
   { value: 15,   suffix: "+", ar: "سنة خبرة",    en: "Years Experience" },
-  { value: 5000, suffix: "+", ar: "حالة ناجحة",  en: "Successful Cases" },
+  { value: 20000, suffix: "+", ar: "حالة ناجحة",  en: "Successful Cases" },
   { value: 4,    suffix: "",  ar: "فروع",         en: "Branches" },
   { value: 100,  suffix: "%", ar: "رضا المرضى",  en: "Patient Satisfaction" },
 ];
 
 export const BRANCHES_I18N = [
   { id: 1, icon: "🏥", ar: { name: "التجمع الخامس",  address: "كايرو ميديكال سنتر خلف المستشفى الجوى - شارع التسعين الشمالى" }, en: { name: "Fifth Settlement", address: "Cairo Medical Center, behind Air Force Hospital, North 90th St." } },
-  { id: 2, icon: "🏥", ar: { name: "المهندسين",       address: "43 شارع سوريا بجوار لابور، المهندسين" },                          en: { name: "Mohandessin",       address: "43 Syria St., next to Labor Hospital, Mohandessin" } },
-  { id: 3, icon: "🏥", ar: { name: "مدينة نصر",       address: "40 شارع عباس العقاد مدينة نصر أمام كوستا كافية" },                en: { name: "Nasr City",         address: "40 Abbas El-Akkad St., Nasr City, opposite Costa Café" } },
+  { id: 2, icon: "🏥", ar: { name: "المهندسين",       address: "43 شارع سوريا بجوار لابور" },                          en: { name: "Mohandessin",       address: "43 Syria St., next to Labor Hospital" } },
+  { id: 3, icon: "🏥", ar: { name: "مدينة نصر",       address: "40 شارع عباس العقاد أمام كوستا كافية" },                en: { name: "Nasr City",         address: "40 Abbas El-Akkad St., opposite Costa Café" } },
   { id: 4, icon: "🏥", ar: { name: "مدينتى",          address: "ميديكال سنتر 1 مدينتى" },                                         en: { name: "Madinaty",          address: "Medical Center 1, Madinaty" } },
 ];
 
@@ -100,7 +100,7 @@ export const UI = {
     doctorName: "د. محمد الدمياطي",
     doctorSub: "استشارى نساء وتوليد وحقن مجهرى",
     trust1: "خبرة 15+ سنة",
-    trust2: "5000+ حالة ناجحة",
+    trust2: "20000+ حالة ناجحة",
     trust3: "عضو الجمعية الملكية البريطانية",
     // About
     aboutBadge: "عن الدكتور",
@@ -188,7 +188,7 @@ export const UI = {
     doctorName: "Dr. Mohamed Eldomiaty",
     doctorSub: "Consultant OB/GYN & IVF Specialist",
     trust1: "15+ Years Experience",
-    trust2: "5000+ Successful Cases",
+    trust2: "20000+ Successful Cases",
     trust3: "Member, Royal College UK",
     aboutBadge: "About the Doctor",
     aboutBio: "I graduated from Kasr Al-Ainy Faculty of Medicine, Cairo University. I chose obstetrics and gynecology out of passion — it is the study of life's miracle and the most complex psychology in the world: the female mind.",

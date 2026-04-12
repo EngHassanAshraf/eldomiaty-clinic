@@ -19,7 +19,7 @@ export default function Hero() {
   const miniStats = [
     { n: "15+",   l: isRTL ? "سنة خبرة"    : "Years Exp."  },
     { n: "4",     l: isRTL ? "فروع"         : "Branches"    },
-    { n: "5000+", l: isRTL ? "حالة ناجحة"  : "Cases"       },
+    { n: "20000+", l: isRTL ? "حالة ناجحة"  : "Cases"       },
     { n: "100%",  l: isRTL ? "رضا المرضى"  : "Satisfaction" },
   ];
 

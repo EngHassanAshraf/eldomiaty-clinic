@@ -28,7 +28,7 @@ export const BRANCHES = [
   {
     id: 3,
     name: "مدينة نصر",
-    address: "40 شارع عباس العقاد مدينة نصر أمام كوستا كافية",
+    address: "40 شارع عباس العقاد أمام كوستا كافية",
     icon: "🏥",
   },
   {
@@ -132,7 +132,7 @@ export const TESTIMONIALS = [
 
 export const STATS = [
   { value: 15, label: "سنة خبرة", suffix: "+" },
-  { value: 5000, label: "حالة ناجحة", suffix: "+" },
+  { value: 20000, label: "حالة ناجحة", suffix: "+" },
   { value: 4, label: "فروع", suffix: "" },
   { value: 100, label: "رضا المرضى", suffix: "%" },
 ];
