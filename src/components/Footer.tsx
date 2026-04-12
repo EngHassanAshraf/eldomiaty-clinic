@@ -11,8 +11,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-white/10 p-1">
-                <Image src="/logo.png" alt="شعار العيادة" fill className="object-contain" />
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white/10 p-1">
+                <Image
+                  src="/new-logo.png"
+                  alt="شعار عيادة دكتور محمد الدمياطي"
+                  fill
+                  className="object-contain"
+                />
               </div>
               <div>
                 <p className="font-black text-white">د. محمد الدمياطي</p>
@@ -26,13 +31,19 @@ export default function Footer() {
             </p>
             <div className="flex gap-2">
               {[
-                { href: CLINIC.facebook,     char: "f" },
-                { href: CLINIC.youtube,      char: "▶" },
-                { href: CLINIC.instagram,    char: "◎" },
-                { href: CLINIC.whatsappLink, char: "✉" },
+                { href: CLINIC.facebook,     label: "فيسبوك",   char: "f" },
+                { href: CLINIC.youtube,      label: "يوتيوب",   char: "▶" },
+                { href: CLINIC.instagram,    label: "إنستجرام", char: "◎" },
+                { href: CLINIC.whatsappLink, label: "واتساب",   char: "✉" },
               ].map((s) => (
-                <a key={s.char} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#e8294a] flex items-center justify-center text-[#c4a0a0] hover:text-white text-xs font-bold transition-all">
+                <a
+                  key={s.char}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#e8294a] flex items-center justify-center text-[#c4a0a0] hover:text-white text-xs font-bold transition-all duration-200"
+                >
                   {s.char}
                 </a>
               ))}
@@ -45,7 +56,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {BRANCHES.map((b) => (
                 <li key={b.id}>
-                  <a href="#branches" className="text-[#c4a0a0] hover:text-[#f25c74] text-sm transition-colors">
+                  <a href="#branches" className="text-[#c4a0a0] hover:text-[#f25c74] text-sm transition-colors duration-200">
                     {b.name}
                   </a>
                 </li>
@@ -64,7 +75,7 @@ export default function Footer() {
                 { href: "#contact",      label: "اتصل بنا" },
               ].map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="text-[#c4a0a0] hover:text-[#f25c74] text-sm transition-colors">
+                  <a href={l.href} className="text-[#c4a0a0] hover:text-[#f25c74] text-sm transition-colors duration-200">
                     {l.label}
                   </a>
                 </li>
@@ -73,7 +84,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom */}
+        {/* Bottom bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#8a6a6a]">
           <p>© {new Date().getFullYear()} عيادة دكتور محمد الدمياطي. جميع الحقوق محفوظة.</p>
           <p className="flex items-center gap-1">

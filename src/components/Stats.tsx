@@ -41,29 +41,27 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
 
 export default function Stats() {
   return (
-    <section className="section-padding relative overflow-hidden noise-overlay">
-      {/* Gradient background */}
-      <div aria-hidden="true" className="absolute inset-0 grad-stats" />
-      {/* Softened overlay */}
-      <div aria-hidden="true" className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(232,41,74,0.92) 0%, rgba(242,92,116,0.88) 50%, rgba(249,168,180,0.80) 100%)' }} />
-      {/* Dot pattern */}
-      <div aria-hidden="true" className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '26px 26px' }} />
-      {/* Top edge highlight */}
-      <div aria-hidden="true" className="absolute top-0 inset-x-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.40), transparent)' }} />
-      {/* Bottom edge highlight */}
-      <div aria-hidden="true" className="absolute bottom-0 inset-x-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.20), transparent)' }} />
+    <section className="section-padding relative overflow-hidden grad-stats">
+      {/* Subtle dot pattern */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="glass-dark rounded-3xl border border-white/12 group transition-all duration-300 hover:border-white/25 hover:shadow-[0_8px_32px_rgba(0,0,0,0.20)] p-6 text-center relative overflow-hidden"
+              className="bg-white/10 border border-white/20 rounded-2xl p-6 text-center transition-all duration-300 hover:bg-white/15 hover:border-white/30"
             >
-              <div aria-hidden="true" className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-3xl" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%)' }} />
               <CountUp target={stat.value} suffix={stat.suffix} />
-              <p className="text-white/80 text-sm font-semibold mt-1.5">{stat.label}</p>
-              <div className="h-0.5 w-10 mx-auto rounded-full bg-white/25 group-hover:w-16 group-hover:bg-white/50 transition-all duration-400 mt-3" />
+              <p className="text-white/85 text-sm font-semibold mt-2">{stat.label}</p>
+              <div className="h-0.5 w-8 mx-auto rounded-full bg-white/30 mt-3" />
             </div>
           ))}
         </div>

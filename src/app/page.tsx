@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
 import Stats from "@/components/Stats";
+import About from "@/components/About";
 import Services from "@/components/Services";
 import VideoSection from "@/components/VideoSection";
 import Branches from "@/components/Branches";
@@ -15,10 +15,10 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="pb-20 md:pb-0">
+      <main id="main-content" className="pb-20 md:pb-0">
         <Hero />
-        <About />
         <Stats />
+        <About />
         <Services />
         <VideoSection />
         <Branches />
@@ -26,9 +26,7 @@ export default function Home() {
         <Contact />
       </main>
       <Footer />
-      {/* Desktop floating WhatsApp */}
       <WhatsAppFAB />
-      {/* Mobile sticky bottom bar */}
       <MobileCTA />
     </>
   );

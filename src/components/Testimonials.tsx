@@ -1,11 +1,11 @@
 "use client";
 import { useState, useCallback } from "react";
-import { ChevronRight, ChevronLeft, Quote } from "lucide-react";
-import { TESTIMONIALS } from "@/lib/data";
+import { ChevronRight, ChevronLeft, Quote, MessageCircle } from "lucide-react";
+import { TESTIMONIALS, CLINIC } from "@/lib/data";
 
 const AVATAR_COLORS = [
   "from-[#e8294a] to-[#f25c74]",
-  "from-[#f25c74] to-[#fad4db]",
+  "from-[#1a6eb5] to-[#2980d4]",
   "from-[#c0392b] to-[#e8294a]",
 ];
 
@@ -29,67 +29,64 @@ export default function Testimonials() {
   const visible = [0, 1, 2].map((offset) => TESTIMONIALS[(idx + offset) % TESTIMONIALS.length]);
 
   return (
-    <section id="testimonials" className="section-padding bg-section-a">
+    <section id="testimonials" className="section-padding bg-section-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         <div className="section-header">
-          <span className="badge-rose">آراء المرضى</span>
+          <span className="badge-primary">آراء المرضى</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            ماذا يقول <span className="text-grad-rose">عملائنا</span>
+            ماذا تقول <span className="text-grad-primary">مرضانا</span>
           </h2>
-          <div className="divider-rose" />
-          <p className="text-[#8a6a6a] mt-4 text-sm leading-relaxed">
+          <div className="divider-primary" />
+          <p className="text-[#6b7280] mt-4 text-sm leading-relaxed">
             آراء حقيقية من مرضى وثقوا بنا في أهم لحظات حياتهم
           </p>
         </div>
 
-        {/* Cards */}
+        {/* Cards — 3 on desktop, 1 on mobile */}
         <div className="grid md:grid-cols-3 gap-5 mb-10">
           {visible.map((t, i) => (
             <div
               key={`${t.id}-${i}-${idx}`}
-              className={`p-6 transition-all duration-400 ${
+              className={`card-base p-6 relative transition-all duration-300 ${
                 i === 1
-                  ? "card-base scale-[1.04] shadow-rose-lg border-[#fad4db]/80 z-10 relative"
-                  : "card-base opacity-90 scale-[0.98]"
-              }`}
+                  ? "border-t-4 border-t-[#e8294a] shadow-md z-10"
+                  : "opacity-90"
+              } ${i !== 1 ? "hidden md:block" : ""}`}
             >
-              {/* Top accent line for center card */}
-              {i === 1 && (
-                <div aria-hidden="true" className="absolute top-0 inset-x-0 h-1 grad-rose rounded-t-[1.25rem]" />
-              )}
-
               {/* Quote icon */}
-              <Quote size={20} className="text-[#fad4db] rotate-180 mb-2" />
+              <Quote size={20} className="text-[#fad4db] rotate-180 mb-3" />
 
               {/* Quote text */}
-              <p className="text-[#6b4c4c] leading-[1.75] mb-5 text-sm">{t.text}</p>
+              <p className="text-[#6b7280] leading-[1.75] mb-5 text-sm">{t.text}</p>
 
               {/* Author */}
-              <div className="flex items-center gap-3 pt-3 border-t border-[#fad4db]/40">
-                <div className={`w-12 h-12 rounded-full bg-linear-to-br ${AVATAR_COLORS[i]} flex items-center justify-center text-white font-bold text-lg shadow-rose shrink-0`}>
+              <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
+                <div
+                  className={`w-11 h-11 rounded-full bg-linear-to-br ${AVATAR_COLORS[i]} flex items-center justify-center text-white font-bold text-base shrink-0`}
+                >
                   {t.author[0]}
                 </div>
                 <div>
                   <p className="text-sm font-bold text-[#2d1a1a]">{t.author}</p>
                   <div className="flex gap-0.5 mt-0.5">
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <span key={s} className="text-[#e8294a] text-xs drop-shadow-sm">★</span>
+                      <span key={s} className="text-[#e8294a] text-xs">★</span>
                     ))}
                   </div>
                 </div>
-                <span className="mr-auto text-[10px] text-[#c4a0a0] font-medium">مريضة</span>
+                <span className="mr-auto text-[10px] text-[#9ca3af] font-medium">مريضة</span>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Controls */}
-        <div className="flex items-center justify-center gap-4">
+        {/* Navigation controls */}
+        <div className="flex items-center justify-center gap-4 mb-10">
           <button
             onClick={prev}
-            aria-label="السابق"
-            className="glass border border-[#fad4db]/70 rounded-full w-10 h-10 flex items-center justify-center hover:border-[#e8294a]/50 active:scale-95 transition-all duration-200"
+            aria-label="التقييم السابق"
+            className="bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:border-[#e8294a]/40 hover:bg-[#fff0f3] active:scale-95 transition-all duration-200"
           >
             <ChevronRight size={18} className="text-[#6b4c4c]" />
           </button>
@@ -101,8 +98,8 @@ export default function Testimonials() {
                 onClick={() => setIdx(di * 3)}
                 className={`rounded-full transition-all duration-300 ${
                   Math.floor(idx / 3) === di
-                    ? "w-7 h-2.5 grad-rose"
-                    : "w-2.5 h-2.5 bg-[#fad4db] hover:bg-[#f25c74]"
+                    ? "w-6 h-2.5 grad-primary"
+                    : "w-2.5 h-2.5 bg-gray-200 hover:bg-gray-300"
                 }`}
                 aria-label={`الصفحة ${di + 1}`}
               />
@@ -111,12 +108,26 @@ export default function Testimonials() {
 
           <button
             onClick={next}
-            aria-label="التالى"
-            className="glass border border-[#fad4db]/70 rounded-full w-10 h-10 flex items-center justify-center hover:border-[#e8294a]/50 active:scale-95 transition-all duration-200"
+            aria-label="التقييم التالى"
+            className="bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:border-[#e8294a]/40 hover:bg-[#fff0f3] active:scale-95 transition-all duration-200"
           >
             <ChevronLeft size={18} className="text-[#6b4c4c]" />
           </button>
         </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <a
+            href={CLINIC.whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary gap-2 px-8 py-4 text-base"
+          >
+            <MessageCircle size={20} />
+            احجز موعدك الآن
+          </a>
+        </div>
+
       </div>
     </section>
   );

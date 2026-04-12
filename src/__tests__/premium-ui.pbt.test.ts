@@ -7,18 +7,18 @@ import { describe, it, expect } from "vitest";
 import * as fc from "fast-check";
 import { computeSequence } from "../lib/computeSequence";
 
-// Local copies of constants (not exported from components)
+// Local copies of constants (must match component implementations)
 const AVATAR_COLORS = [
   "from-[#e8294a] to-[#f25c74]",
-  "from-[#f25c74] to-[#fad4db]",
+  "from-[#1a6eb5] to-[#2980d4]",
   "from-[#c0392b] to-[#e8294a]",
 ];
 
 const ACCENTS = [
-  { icon: "grad-rose",                                          ring: "border-[#fad4db]/70" },
-  { icon: "bg-linear-to-br from-orange-400 to-amber-400",      ring: "border-[#fde8c8]/70" },
-  { icon: "bg-linear-to-br from-emerald-400 to-teal-400",      ring: "border-[#c8f0e0]/70" },
-  { icon: "bg-linear-to-br from-violet-400 to-purple-500",     ring: "border-[#d8c8f8]/70" },
+  { icon: "grad-primary",                                              top: "bg-[#e8294a]" },
+  { icon: "bg-gradient-to-br from-orange-400 to-amber-400",           top: "bg-amber-400" },
+  { icon: "bg-gradient-to-br from-emerald-400 to-teal-500",           top: "bg-emerald-500" },
+  { icon: "bg-gradient-to-br from-violet-400 to-purple-500",          top: "bg-violet-500" },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -144,10 +144,10 @@ describe("Property 5: Branch accent colors are all distinct", () => {
     expect(uniqueIcons.size).toBe(4);
   });
 
-  it("all 4 ACCENTS ring values are distinct strings", () => {
-    const rings = ACCENTS.map((a) => a.ring);
-    const uniqueRings = new Set(rings);
-    expect(uniqueRings.size).toBe(4);
+  it("all 4 ACCENTS top values are distinct strings", () => {
+    const tops = ACCENTS.map((a) => a.top);
+    const uniqueTops = new Set(tops);
+    expect(uniqueTops.size).toBe(4);
   });
 });
 
@@ -160,9 +160,11 @@ describe("Property 6: All image alt attributes are non-empty", () => {
   it("all known image alt attributes in the codebase are non-empty strings", () => {
     // Static check: enumerate all alt attributes used in the codebase
     const altAttributes = [
-      "شعار عيادة دكتور محمد الدمياطي", // Navbar logo
-      "شعار العيادة",                     // Hero card logo
-      "شعار العيادة",                     // Footer logo
+      "شعار عيادة دكتور محمد الدمياطي",                                    // Navbar logo
+      "دكتور محمد الدمياطي — استشارى أمراض النساء والتوليد",               // Hero doctor image
+      "غرفة العمليات في عيادة دكتور محمد الدمياطي",                        // Services operation room
+      "مقابلة تلفزيونية مع دكتور محمد الدمياطي",                           // VideoSection tv interview
+      "شعار عيادة دكتور محمد الدمياطي",                                    // Footer logo
     ];
 
     fc.assert(
