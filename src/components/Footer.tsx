@@ -1,81 +1,74 @@
+"use client";
 import Image from "next/image";
 import { Heart } from "lucide-react";
-import { CLINIC, BRANCHES } from "@/lib/data";
+import { CLINIC } from "@/lib/data";
+import { useLocale } from "@/lib/LocaleContext";
+import { UI, BRANCHES_I18N } from "@/lib/i18n";
 
 export default function Footer() {
+  const { locale } = useLocale();
+  const t = UI[locale];
+
+  const quickLinks = [
+    { href: "#about",        label: t.aboutBadge },
+    { href: "#services",     label: t.servicesBadge },
+    { href: "#testimonials", label: t.testimonialsBadge },
+    { href: "#contact",      label: t.contactBadge },
+  ];
+
+  const socials = [
+    { href: CLINIC.facebook,     label: t.facebook,   char: "f" },
+    { href: CLINIC.youtube,      label: t.youtube,    char: "▶" },
+    { href: CLINIC.instagram,    label: t.instagram,  char: "◎" },
+    { href: CLINIC.whatsappLink, label: t.whatsapp,   char: "✉" },
+  ];
+
   return (
     <footer className="bg-[#2d1a1a] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
 
-          {/* Brand */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white/10 p-1">
-                <Image
-                  src="/new-logo.png"
-                  alt="شعار عيادة دكتور محمد الدمياطي"
-                  fill
-                  className="object-contain"
-                />
+              <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-white p-1">
+                <Image src="/new-logo.png" alt={`شعار ${CLINIC.name}`} fill className="object-contain" />
               </div>
               <div>
-                <p className="font-black text-white">د. محمد الدمياطي</p>
-                <p className="text-xs text-[#c4a0a0]">نساء · توليد · حقن مجهرى</p>
+                <p className="font-black text-white">{locale === "ar" ? "د. محمد الدمياطي" : "Dr. Mohamed Eldomiaty"}</p>
+                <p className="text-xs text-[#c4a0a0]">{t.footerSub}</p>
               </div>
             </div>
-            <p className="text-[#c4a0a0] text-sm leading-relaxed max-w-sm">
-              استشارى أمراض النساء والتوليد والحقن المجهرى والمناظير بطب القصر
-              العينى جامعة القاهرة. عضو الجمعية الملكية البريطانية والجمعية
-              الأمريكية للإنجاب.
-            </p>
+            <p className="text-[#c4a0a0] text-sm leading-relaxed max-w-sm">{t.footerDesc}</p>
             <div className="flex gap-2">
-              {[
-                { href: CLINIC.facebook,     label: "فيسبوك",   char: "f" },
-                { href: CLINIC.youtube,      label: "يوتيوب",   char: "▶" },
-                { href: CLINIC.instagram,    label: "إنستجرام", char: "◎" },
-                { href: CLINIC.whatsappLink, label: "واتساب",   char: "✉" },
-              ].map((s) => (
-                <a
-                  key={s.char}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+              {socials.map((s) => (
+                <a key={s.char} href={s.href} target="_blank" rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#e8294a] flex items-center justify-center text-[#c4a0a0] hover:text-white text-xs font-bold transition-all duration-200"
-                >
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#E91E63] flex items-center justify-center text-[#c4a0a0] hover:text-white text-xs font-bold transition-all duration-200">
                   {s.char}
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Branches */}
           <div>
-            <h4 className="font-black text-white mb-4 text-sm">فروعنا</h4>
+            <h4 className="font-black text-white mb-4 text-sm">{t.ourBranches}</h4>
             <ul className="space-y-2">
-              {BRANCHES.map((b) => (
+              {BRANCHES_I18N.map((b) => (
                 <li key={b.id}>
-                  <a href="#branches" className="text-[#c4a0a0] hover:text-[#f25c74] text-sm transition-colors duration-200">
-                    {b.name}
+                  <a href="#branches" className="text-[#c4a0a0] hover:text-[#F06292] text-sm transition-colors duration-200">
+                    {b[locale].name}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Quick links */}
           <div>
-            <h4 className="font-black text-white mb-4 text-sm">روابط سريعة</h4>
+            <h4 className="font-black text-white mb-4 text-sm">{t.quickLinks}</h4>
             <ul className="space-y-2">
-              {[
-                { href: "#about",        label: "عن الدكتور" },
-                { href: "#services",     label: "الخدمات" },
-                { href: "#testimonials", label: "آراء المرضى" },
-                { href: "#contact",      label: "اتصل بنا" },
-              ].map((l) => (
+              {quickLinks.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href} className="text-[#c4a0a0] hover:text-[#f25c74] text-sm transition-colors duration-200">
+                  <a href={l.href} className="text-[#c4a0a0] hover:text-[#F06292] text-sm transition-colors duration-200">
                     {l.label}
                   </a>
                 </li>
@@ -84,11 +77,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#8a6a6a]">
-          <p>© {new Date().getFullYear()} عيادة دكتور محمد الدمياطي. جميع الحقوق محفوظة.</p>
+          <p>© {new Date().getFullYear()} {CLINIC.name}. {t.copyright}</p>
           <p className="flex items-center gap-1">
-            صُنع بـ <Heart size={12} className="text-[#e8294a] fill-[#e8294a]" /> لصحة المرأة المصرية
+            {t.madeWith} <Heart size={12} className="text-[#E91E63] fill-[#E91E63]" /> {t.madeFor}
           </p>
         </div>
       </div>

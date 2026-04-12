@@ -17,8 +17,8 @@ export default function Home() {
       <Navbar />
       <main id="main-content" className="pb-20 md:pb-0">
         <Hero />
-        <Stats />
         <About />
+        <Stats />
         <Services />
         <VideoSection />
         <Branches />

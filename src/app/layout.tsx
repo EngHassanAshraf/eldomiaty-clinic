@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SchemaOrg from "@/components/SchemaOrg";
+import { LocaleProvider } from "@/lib/LocaleContext";
+import LocaleWrapper from "@/components/LocaleWrapper";
+import { AuthProvider } from "@/contexts/auth-context";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "دكتور محمد الدمياطى - اشطر دكتور نساء وتوليد وحقن مجهرى",
@@ -45,7 +49,16 @@ fbq('init','502846864259282');fbq('track','PageView');`,
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <AuthProvider>
+          <Toaster position="top-center" />
+          <LocaleProvider>
+            <LocaleWrapper>
+              {children}
+            </LocaleWrapper>
+          </LocaleProvider>
+        </AuthProvider>
+      </body>
     </html>
   );
 }

@@ -3,16 +3,16 @@
 @layer base {
   :root {
     /* ── Brand colours ── */
-    --primary:       #e8294a;
-    --primary-light: #f25c74;
-    --primary-dark:  #c0392b;
-    --secondary:     #1a6eb5;
-    --secondary-light: #2980d4;
+    --primary:       #E91E63;
+    --primary-light: #F06292;
+    --primary-dark:  #C2185B;
+    --secondary:     #3A8DDE;
+    --secondary-light: #64B5F6;
 
     /* ── Background tokens ── */
-    --ivory:      #fdfaf8;
+    --ivory:      #FDF7F9;
     --light-gray: #f5f5f5;
-    --blush:      #fad4db;
+    --blush:      #FCE4EC;
 
     /* ── Warm palette ── */
     --warm-50:  #faf7f5;
@@ -62,7 +62,7 @@
 
   .bg-section-a  { background: linear-gradient(180deg, var(--ivory) 0%, #fff5f7 100%); }
   .bg-section-b  { background: linear-gradient(180deg, #fff5f7 0%, var(--ivory) 100%); }
-  .bg-hero       { background: linear-gradient(135deg, var(--ivory) 0%, #fef0f3 60%, #fdfaf8 100%); }
+  .bg-hero       { background: linear-gradient(135deg, var(--ivory) 0%, #fce4ec 60%, #FDF7F9 100%); }
 
   /* ── Gradients ── */
   .grad-primary  { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); }
