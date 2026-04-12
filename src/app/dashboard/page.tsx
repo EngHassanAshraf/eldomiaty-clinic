@@ -1,0 +1,76 @@
+'use client';
+import { useState } from 'react';
+import { useAuth } from '@/contexts/auth-context';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import UsersTab from './components/UsersTab';
+import PaymentsTab from './components/PaymentsTab';
+import FilesTab from './components/FilesTab';
+import { Users, CreditCard, FileText } from 'lucide-react';
+
+type Tab = 'users' | 'payments' | 'files';
+
+const TABS = [
+  { id: 'users' as Tab, label: 'المستخدمون', icon: Users },
+  { id: 'payments' as Tab, label: 'المدفوعات', icon: CreditCard },
+  { id: 'files' as Tab, label: 'الملفات', icon: FileText },
+];
+
+export default function DashboardPage() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<Tab>('users');
+
+  useEffect(() => {
+    if (!isLoading && (!user || user.role !== 'ADMIN')) {
+      router.push('/');
+    }
+  }, [user, isLoading, router]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="min-h-screen bg-section-a section-padding flex items-center justify-center">
+        <div className="text-[#8a6a6a]">جارى التحميل...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-section-a section-padding">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="section-header">
+          <span className="badge-rose">لوحة التحكم</span>
+          <h1 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
+            إدارة <span className="text-grad-rose">العيادة</span>
+          </h1>
+          <div className="divider-rose" />
+        </div>
+
+        {/* Tab navigation */}
+        <div className="flex gap-2 mb-8 flex-wrap">
+          {TABS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                activeTab === id
+                  ? 'grad-rose text-white shadow-rose'
+                  : 'bg-white/80 text-[#6b4c4c] border border-[#fad4db]/60 hover:border-[#e8294a]/40 hover:text-[#e8294a]'
+              }`}
+            >
+              <Icon size={16} />
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab content */}
+        <div className="card-base glass p-6">
+          {activeTab === 'users' && <UsersTab />}
+          {activeTab === 'payments' && <PaymentsTab />}
+          {activeTab === 'files' && <FilesTab />}
+        </div>
+      </div>
+    </div>
+  );
+}
