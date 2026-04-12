@@ -21,9 +21,9 @@ export default function About() {
     <section id="about" className="section-padding bg-section-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-primary">{t.aboutBadge}</span>
+          <span className="badge-secondary">{t.aboutBadge}</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            {locale === "ar" ? <>د. محمد <span className="text-grad-primary">الدمياطي</span></> : <>Dr. <span className="text-grad-primary">Eldomiaty</span></>}
+            {locale === "ar" ? <>د. محمد <span className="text-grad-secondary">الدمياطي</span></> : <>Dr. <span className="text-grad-secondary">Eldomiaty</span></>}
           </h2>
           <div className="divider-primary" />
         </div>

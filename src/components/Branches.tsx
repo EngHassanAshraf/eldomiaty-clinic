@@ -21,9 +21,9 @@ export default function Branches() {
     <section id="branches" className="section-padding bg-section-a">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-primary">{t.branchesBadge}</span>
+          <span className="badge-secondary">{t.branchesBadge}</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            {t.branchesTitle} <span className="text-grad-primary">{t.branchesHighlight}</span>
+            {t.branchesTitle} <span className="text-grad-secondary">{t.branchesHighlight}</span>
           </h2>
           <div className="divider-primary" />
           <p className="text-[#6b7280] mt-4 text-sm">{t.branchesDesc}</p>
@@ -36,12 +36,14 @@ export default function Branches() {
             return (
               <div key={branch.id} className="card-base overflow-hidden">
                 <div className={`h-1 ${a.top}`} />
-                <div className="p-6">
-                  <div className={`${a.icon} rounded-xl w-11 h-11 flex items-center justify-center text-white text-lg mb-4 shadow-subtle`}>
-                    {branch.icon}
+                <div className="p-6 flex flex-col justify-between h-full">
+                  <div className="w-full flex items-center mb-2">
+                    <div className={`${a.icon} rounded-xl w-11 h-11 flex items-center justify-center text-white text-lg me-4 shadow-subtle`}>
+                      {branch.icon}
+                    </div>
+                    <h3 className="font-bold text-[#2d1a1a]">{b.name}</h3>
                   </div>
-                  <h3 className="font-bold text-[#2d1a1a] mb-1">{b.name}</h3>
-                  <p className="text-sm text-[#6b7280] leading-relaxed mb-4">{b.address}</p>
+                  <p className="mb-2 text-sm text-[#6b7280] leading-relaxed">{b.address}</p>
                   <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-sm font-semibold text-[#E91E63] hover:text-[#C2185B] transition-colors">
                     <MapPin size={13} />{t.bookBranch}

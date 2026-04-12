@@ -45,7 +45,7 @@ export default function Stats() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           {STATS_I18N.map((stat) => (
-            <div key={stat.ar} className="bg-white/10 border border-white/20 rounded-2xl p-6 text-center transition-all duration-300 hover:bg-white/15 hover:border-white/30">
+            <div key={stat.ar} className="bg-[rgba(58,141,222,0.3)] border border-white/20 rounded-2xl p-6 text-center transition-all duration-300 hover:bg-white/15 hover:border-white/30">
               <CountUp target={stat.value} suffix={stat.suffix} />
               <p className="text-white/85 text-sm font-semibold mt-2">{stat[locale]}</p>
               <div className="h-0.5 w-8 mx-auto rounded-full bg-white/30 mt-3" />

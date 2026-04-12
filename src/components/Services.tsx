@@ -24,9 +24,9 @@ export default function Services() {
     <section id="services" className="section-padding bg-section-a">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-primary">{t.servicesBadge}</span>
+          <span className="badge-secondary">{t.servicesBadge}</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            {t.servicesTitle} <span className="text-grad-primary">{t.servicesHighlight}</span>
+            {t.servicesTitle} <span className="text-grad-secondary">{t.servicesHighlight}</span>
           </h2>
           <div className="divider-primary" />
           <p className="text-[#6b7280] max-w-xl mx-auto mt-4 text-sm leading-relaxed">{t.servicesDesc}</p>
@@ -51,14 +51,15 @@ export default function Services() {
             {allCats.map((cat) => (
               <button key={cat} onClick={() => setActive(cat)}
                 className={active === cat
-                  ? "grad-primary text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-primary transition-all duration-200"
+                  ? "grad-secondary text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-primary transition-all duration-200"
                   : "bg-white/20 text-white border border-white/40 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white/35 hover:border-white/70 transition-all duration-200 cursor-pointer backdrop-blur-sm"
                 }>
                 {cat}
               </button>
             ))}
           </div>
-        </div>        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        </div>        
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map((s) => (
             <div key={s.id} className="card-base p-5 text-center cursor-default min-h-[120px] flex flex-col items-center justify-center gap-2">
               <div className="text-3xl">{s.icon}</div>

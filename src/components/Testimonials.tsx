@@ -29,9 +29,9 @@ export default function Testimonials() {
     <section id="testimonials" className="section-padding bg-section-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-primary">{t.testimonialsBadge}</span>
+          <span className="badge-secondary">{t.testimonialsBadge}</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            {t.testimonialsTitle} <span className="text-grad-primary">{t.testimonialsHighlight}</span>
+            {t.testimonialsTitle} <span className="text-grad-secondary">{t.testimonialsHighlight}</span>
           </h2>
           <div className="divider-primary" />
           <p className="text-[#6b7280] mt-4 text-sm leading-relaxed">{t.testimonialsDesc}</p>

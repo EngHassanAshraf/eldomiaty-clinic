@@ -7,7 +7,7 @@
     --primary-light: #F06292;
     --primary-dark:  #C2185B;
     --secondary:     #3A8DDE;
-    --secondary-light: #64B5F6;
+    --secondary-light: #64b5f6;
 
     /* ── Background tokens ── */
     --ivory:      #FDF7F9;
@@ -66,10 +66,18 @@
 
   /* ── Gradients ── */
   .grad-primary  { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); }
+  .grad-secondary  { background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%); }
   .grad-stats    { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); }
 
   .text-grad-primary {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-grad-secondary {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -101,7 +109,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
     color: white;
     font-weight: 700;
     font-size: 0.9375rem;
@@ -158,11 +166,32 @@
     border: 1px solid rgba(232,41,74,0.20);
   }
 
+  .badge-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: #f0fff3;
+    color: var(--secondary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    border: 1px solid rgb(100, 181, 246, 0.3);
+  }
+
   /* ── Divider ── */
   .divider-primary {
     width: 3rem;
     height: 3px;
     background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 9999px;
+    margin: 0.75rem auto 0;
+  }
+
+  .divider-secondary {
+    width: 3rem;
+    height: 3px;
+    background: linear-gradient(90deg, var(--secondary) 0%, var(--secondary-light) 100%);
     border-radius: 9999px;
     margin: 0.75rem auto 0;
   }

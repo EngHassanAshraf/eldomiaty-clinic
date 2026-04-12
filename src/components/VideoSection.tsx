@@ -19,9 +19,9 @@ export default function VideoSection() {
     <section className="section-padding bg-section-b">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-primary">{t.videoBadge}</span>
+          <span className="badge-secondary">{t.videoBadge}</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            {t.videoTitle} <span className="text-grad-primary">{t.videoHighlight}</span>
+            {t.videoTitle} <span className="text-grad-secondary">{t.videoHighlight}</span>
           </h2>
           <div className="divider-primary" />
           <p className="text-[#6b7280] mt-4 text-sm max-w-lg mx-auto leading-relaxed">{t.videoDesc}</p>

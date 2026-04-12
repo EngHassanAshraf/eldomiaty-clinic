@@ -105,7 +105,7 @@ export default function Navbar() {
               rel="noopener noreferrer"
               aria-label={t.ctaAria}
               className="px-5 py-2 rounded-full text-sm font-bold text-white transition-all duration-200 hover:shadow-[0_4px_16px_rgba(233,30,99,0.40)] hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
-              style={{ background: "linear-gradient(135deg, #E91E63 0%, #F06292 100%)" }}
+              style={{ background: "linear-gradient(135deg, #6BADEB 0%, #3A8DDE  100%)" }}
             >
               {t.cta}
             </a>

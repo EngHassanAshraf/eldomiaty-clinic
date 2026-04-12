@@ -20,9 +20,9 @@ export default function Contact() {
     <section id="contact" className="section-padding bg-section-a">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-primary">{t.contactBadge}</span>
+          <span className="badge-secondary">{t.contactBadge}</span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            {t.contactTitle} <span className="text-grad-primary">{t.contactHighlight}</span>
+            {t.contactTitle} <span className="text-grad-secondary">{t.contactHighlight}</span>
           </h2>
           <div className="divider-primary" />
           <p className="text-[#6b7280] mt-4 text-sm">{t.contactSubDesc}</p>
