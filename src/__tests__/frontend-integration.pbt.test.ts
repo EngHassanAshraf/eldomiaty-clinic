@@ -133,7 +133,7 @@ describe('Property 5: Middleware redirect preserves path', () => {
   it('redirect URL is /login?redirect=<path>', () => {
     fc.assert(
       fc.property(
-        fc.constantFrom('/files', '/dashboard', '/payment/success'),
+        fc.constantFrom('/files', '/dashboard', '/payment/request'),
         (path) => {
           // Simulate middleware redirect logic
           const loginUrl = new URL('/login', 'http://localhost:3000');
