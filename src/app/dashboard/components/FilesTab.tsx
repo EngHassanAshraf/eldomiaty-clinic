@@ -12,6 +12,7 @@ export default function FilesTab() {
   const [files, setFiles] = useState<FileRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const previewInputRef = useRef<HTMLInputElement>(null);
 
   // Upload form state
   const [title, setTitle] = useState('');
@@ -45,12 +46,19 @@ export default function FilesTab() {
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     const file = fileInputRef.current?.files?.[0];
+    const previewFile = previewInputRef.current?.files?.[0];
     if (!file) { toast.error('اختر ملف PDF'); return; }
     if (file.type !== 'application/pdf') { toast.error('يجب أن يكون الملف PDF'); return; }
     if (file.size > 50 * 1024 * 1024) { toast.error('حجم الملف يجب أن يكون أقل من 50 ميجابايت'); return; }
+    if (isPaidContent) {
+      if (!previewFile) { toast.error('اختر ملف المعاينة (صفحتان)'); return; }
+      if (previewFile.type !== 'application/pdf') { toast.error('يجب أن يكون ملف المعاينة PDF'); return; }
+      if (previewFile.size > 50 * 1024 * 1024) { toast.error('حجم ملف المعاينة يجب أن يكون أقل من 50 ميجابايت'); return; }
+    }
 
     const formData = new FormData();
     formData.append('file', file);
+    if (isPaidContent && previewFile) formData.append('previewFile', previewFile);
     formData.append('title', title);
     formData.append('description', description);
     formData.append('isPaidContent', String(isPaidContent));
@@ -61,6 +69,7 @@ export default function FilesTab() {
       setFiles((prev) => [newFile, ...prev]);
       setTitle(''); setDescription(''); setIsPaidContent(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
+      if (previewInputRef.current) previewInputRef.current.value = '';
       toast.success('تم رفع الملف بنجاح');
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : 'فشل رفع الملف');
@@ -123,6 +132,10 @@ export default function FilesTab() {
         <div className="flex items-center gap-3 flex-wrap">
           <input ref={fileInputRef} type="file" accept="application/pdf" disabled={uploading}
             className="text-sm text-[#6b4c4c] file:btn-rose file:text-xs file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:cursor-pointer" />
+          {isPaidContent && (
+            <input ref={previewInputRef} type="file" accept="application/pdf" disabled={uploading}
+              className="text-sm text-[#6b4c4c] file:btn-rose file:text-xs file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:cursor-pointer" />
+          )}
           <label className="flex items-center gap-2 text-sm text-[#6b4c4c] cursor-pointer">
             <input type="checkbox" checked={isPaidContent} onChange={(e) => setIsPaidContent(e.target.checked)}
               className="w-4 h-4 accent-[#e8294a]" />

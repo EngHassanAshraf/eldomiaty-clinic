@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { Lock, FileText } from 'lucide-react';
 
 export default function FilesPage() {
-  const { accessToken, isLoading: authLoading } = useAuth();
+  const { accessToken, isLoading: authLoading, refreshAuth } = useAuth();
   const router = useRouter();
   const [files, setFiles] = useState<FileRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,7 @@ export default function FilesPage() {
     if (authLoading) return;
     const load = async () => {
       try {
+        await refreshAuth();
         const data = await filesApi.getFiles(accessToken);
         setFiles(data);
       } catch (err) {
@@ -31,7 +32,7 @@ export default function FilesPage() {
       }
     };
     load();
-  }, [accessToken, authLoading]);
+  }, [accessToken, authLoading, refreshAuth]);
 
   return (
     <div className="min-h-screen bg-section-a section-padding">

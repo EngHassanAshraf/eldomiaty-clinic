@@ -6,28 +6,33 @@ import { ApiError } from '@/lib/api/types';
 import Skeleton from '@/components/ui/Skeleton';
 import toast from 'react-hot-toast';
 import { Lock } from 'lucide-react';
-import { paymentsApi } from '@/lib/api/payments';
 import { useRouter } from 'next/navigation';
 
 interface PdfViewerProps {
   fileId: string;
-  isPaid: boolean;
+  isPaidContent: boolean;
+  userIsPaid: boolean;
 }
 
-export default function PdfViewer({ fileId, isPaid }: PdfViewerProps) {
-  const { accessToken } = useAuth();
+export default function PdfViewer({ fileId, isPaidContent, userIsPaid }: PdfViewerProps) {
+  const { accessToken, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [signedUrl, setSignedUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const needsPaywall = isPaidContent && !userIsPaid;
 
   useEffect(() => {
-    if (!accessToken) return;
+    if (authLoading) return;
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
     const load = async () => {
       try {
-        const data = isPaid
-          ? await filesApi.getFullAccess(fileId, accessToken)
-          : await filesApi.getPreview(fileId, accessToken);
+        const data = needsPaywall
+          ? await filesApi.getPreview(fileId, accessToken)
+          : await filesApi.getFullAccess(fileId, accessToken);
         setSignedUrl(data.url);
       } catch (err) {
         const msg = err instanceof ApiError ? err.message : 'فشل تحميل الملف';
@@ -37,23 +42,29 @@ export default function PdfViewer({ fileId, isPaid }: PdfViewerProps) {
       }
     };
     load();
-  }, [fileId, isPaid, accessToken]);
+  }, [fileId, needsPaywall, accessToken, authLoading]);
 
-  const handleUnlock = async () => {
-    if (!accessToken) { router.push('/login'); return; }
-    setCheckoutLoading(true);
-    try {
-      const { url } = await paymentsApi.createCheckout(accessToken);
-      window.location.href = url;
-    } catch (err) {
-      const msg = err instanceof ApiError ? err.message : 'فشل إنشاء جلسة الدفع';
-      toast.error(msg);
-      setCheckoutLoading(false);
+  const handleRequestAccess = () => {
+    if (!accessToken) {
+      router.push('/login');
+      return;
     }
+    router.push('/payment/request');
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <Skeleton className="w-full h-[600px]" />;
+  }
+
+  if (!accessToken) {
+    return (
+      <div className="card-base glass p-8 text-center text-[#8a6a6a]">
+        <p className="mb-4">يجب تسجيل الدخول لعرض الملف</p>
+        <button onClick={() => router.push('/login')} className="btn-rose px-6 py-2">
+          تسجيل الدخول
+        </button>
+      </div>
+    );
   }
 
   if (!signedUrl) {
@@ -66,7 +77,6 @@ export default function PdfViewer({ fileId, isPaid }: PdfViewerProps) {
 
   return (
     <div className="relative w-full">
-      {/* iframe — signed URL never exposed as href */}
       <iframe
         src={signedUrl}
         className="w-full h-[600px] rounded-2xl border border-[#fad4db]/50 shadow-rose"
@@ -74,19 +84,17 @@ export default function PdfViewer({ fileId, isPaid }: PdfViewerProps) {
         sandbox="allow-scripts allow-same-origin"
       />
 
-      {/* Upgrade overlay for unpaid users */}
-      {!isPaid && (
+      {needsPaywall && (
         <div className="absolute bottom-0 inset-x-0 h-48 bg-linear-to-t from-white via-white/90 to-transparent rounded-b-2xl flex flex-col items-center justify-end pb-8 gap-3">
           <div className="flex items-center gap-2 text-[#2d1a1a] font-bold">
             <Lock size={18} className="text-[#e8294a]" />
             هذا المحتوى متاح للمشتركين فقط
           </div>
           <button
-            onClick={handleUnlock}
-            disabled={checkoutLoading}
-            className="btn-rose gap-2 px-6 py-3 disabled:opacity-60"
+            onClick={handleRequestAccess}
+            className="btn-rose gap-2 px-6 py-3"
           >
-            {checkoutLoading ? 'جارى التحويل...' : 'اشترك للوصول الكامل'}
+            اطلب تفعيل الاشتراك
           </button>
         </div>
       )}
