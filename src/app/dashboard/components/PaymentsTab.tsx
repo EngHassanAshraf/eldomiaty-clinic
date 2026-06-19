@@ -1,33 +1,113 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
-import { paymentsApi } from '@/lib/api/payments';
-import { PaymentRecord, ApiError } from '@/lib/api/types';
+import { paymentRequestsApi } from '@/lib/api/payment-requests';
+import { PaymentRequestRecord, PaymentMethod, PaymentStatus, ApiError } from '@/lib/api/types';
 import Skeleton from '@/components/ui/Skeleton';
 import toast from 'react-hot-toast';
+import { Check, Eye, X } from 'lucide-react';
+
+const METHOD_LABELS: Record<PaymentMethod, string> = {
+  BANK_TRANSFER: 'تحويل بنكي',
+  INSTAPAY: 'إنستاباي',
+  VODAFONE_CASH: 'فودافون كاش',
+  ORANGE_CASH: 'أورانج كاش',
+  ETISALAT_CASH: 'اتصالات كاش',
+};
+
+const STATUS_LABELS: Record<PaymentStatus, string> = {
+  PENDING: 'قيد المراجعة',
+  APPROVED: 'مقبول',
+  REJECTED: 'مرفوض',
+};
+
+function statusClass(status: PaymentStatus) {
+  if (status === 'APPROVED') {
+    return 'bg-emerald-50 text-emerald-700 border border-emerald-200/60';
+  }
+  if (status === 'REJECTED') {
+    return 'bg-red-50 text-red-700 border border-red-200/60';
+  }
+  return 'bg-amber-50 text-amber-700 border border-amber-200/60';
+}
+
+type ReviewAction = 'approve' | 'reject';
 
 export default function PaymentsTab() {
   const { accessToken } = useAuth();
-  const [payments, setPayments] = useState<PaymentRecord[]>([]);
+  const [requests, setRequests] = useState<PaymentRequestRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [actingId, setActingId] = useState<string | null>(null);
+  const [review, setReview] = useState<{ id: string; action: ReviewAction } | null>(null);
+  const [adminNotes, setAdminNotes] = useState('');
+
+  const load = useCallback(async () => {
+    if (!accessToken) return;
+    try {
+      const data = await paymentRequestsApi.listForAdmin(accessToken);
+      setRequests(data);
+      setError(null);
+    } catch (err) {
+      const msg = err instanceof ApiError ? err.message : 'فشل تحميل طلبات الدفع';
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  }, [accessToken]);
 
   useEffect(() => {
-    if (!accessToken) return;
-    const load = async () => {
-      try {
-        const data = await paymentsApi.getPayments(accessToken);
-        setPayments(data);
-      } catch (err) {
-        const msg = err instanceof ApiError ? err.message : 'فشل تحميل المدفوعات';
-        setError(msg);
-        toast.error(msg);
-      } finally {
-        setLoading(false);
-      }
-    };
     load();
-  }, [accessToken]);
+  }, [load]);
+
+  const handleViewScreenshot = async (id: string) => {
+    if (!accessToken) return;
+    try {
+      const { url } = await paymentRequestsApi.getScreenshotUrl(id, accessToken);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (err) {
+      toast.error(err instanceof ApiError ? err.message : 'فشل تحميل الصورة');
+    }
+  };
+
+  const openReview = (id: string, action: ReviewAction) => {
+    setAdminNotes('');
+    setReview({ id, action });
+  };
+
+  const closeReview = () => {
+    if (actingId) return;
+    setReview(null);
+    setAdminNotes('');
+  };
+
+  const handleReviewSubmit = async () => {
+    if (!accessToken || !review) return;
+    const { id, action } = review;
+    const notes = adminNotes.trim() || undefined;
+    setActingId(id);
+    try {
+      const updated =
+        action === 'approve'
+          ? await paymentRequestsApi.approve(id, accessToken, notes)
+          : await paymentRequestsApi.reject(id, accessToken, notes);
+      setRequests((prev) => prev.map((r) => (r.id === id ? updated : r)));
+      toast.success(action === 'approve' ? 'تمت الموافقة على الطلب' : 'تم رفض الطلب');
+      setReview(null);
+      setAdminNotes('');
+    } catch (err) {
+      toast.error(
+        err instanceof ApiError
+          ? err.message
+          : action === 'approve'
+            ? 'فشلت الموافقة'
+            : 'فشل الرفض'
+      );
+    } finally {
+      setActingId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -38,42 +118,159 @@ export default function PaymentsTab() {
   }
 
   if (error) return <div className="text-center py-8 text-[#8a6a6a]">{error}</div>;
-  if (payments.length === 0) return <div className="text-center py-8 text-[#8a6a6a]">لا توجد مدفوعات</div>;
+  if (requests.length === 0) {
+    return <div className="text-center py-8 text-[#8a6a6a]">لا توجد طلبات دفع</div>;
+  }
+
+  const isSubmitting = review !== null && actingId === review.id;
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-[#fad4db]/40">
-            <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">المستخدم</th>
-            <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">المبلغ</th>
-            <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">الحالة</th>
-            <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">التاريخ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {payments.map((p) => (
-            <tr key={p.id} className="border-b border-[#fad4db]/20 hover:bg-[#fff0f3]/30 transition-colors">
-              <td className="py-3 px-4 text-[#2d1a1a] text-xs" dir="ltr">{p.userId}</td>
-              <td className="py-3 px-4 text-[#2d1a1a] font-semibold">
-                {(p.amount / 100).toFixed(2)} {p.currency.toUpperCase()}
-              </td>
-              <td className="py-3 px-4">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                  p.status === 'paid'
-                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
-                    : 'bg-gray-50 text-gray-600 border border-gray-200'
-                }`}>
-                  {p.status}
-                </span>
-              </td>
-              <td className="py-3 px-4 text-[#8a6a6a] text-xs">
-                {new Date(p.createdAt).toLocaleDateString('ar-EG')}
-              </td>
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[#fad4db]/40">
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">المستخدم</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">طريقة الدفع</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">الحالة</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">التاريخ</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">ملاحظات</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">إجراءات</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {requests.map((r) => (
+              <tr key={r.id} className="border-b border-[#fad4db]/20 hover:bg-[#fff0f3]/30 transition-colors">
+                <td className="py-3 px-4 text-[#2d1a1a] text-xs" dir="ltr">
+                  {r.userEmail ?? r.userId}
+                </td>
+                <td className="py-3 px-4 text-[#2d1a1a]">{METHOD_LABELS[r.method]}</td>
+                <td className="py-3 px-4">
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass(r.status)}`}>
+                    {STATUS_LABELS[r.status]}
+                  </span>
+                </td>
+                <td className="py-3 px-4 text-[#8a6a6a] text-xs">
+                  {new Date(r.createdAt).toLocaleDateString('ar-EG')}
+                </td>
+                <td className="py-3 px-4 text-[#8a6a6a] text-xs max-w-[200px]">
+                  {r.adminNotes ? (
+                    <span className="line-clamp-2" title={r.adminNotes}>
+                      {r.adminNotes}
+                    </span>
+                  ) : (
+                    <span className="text-[#c4a0a0]">—</span>
+                  )}
+                </td>
+                <td className="py-3 px-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleViewScreenshot(r.id)}
+                      disabled={actingId === r.id}
+                      className="text-[#8a6a6a] hover:text-[#e8294a] transition-colors disabled:opacity-50"
+                      title="عرض لقطة الشاشة"
+                    >
+                      <Eye size={16} />
+                    </button>
+                    {r.status === 'PENDING' && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => openReview(r.id, 'approve')}
+                          disabled={actingId === r.id}
+                          className="text-emerald-600 hover:text-emerald-700 transition-colors disabled:opacity-50"
+                          title="موافقة"
+                        >
+                          <Check size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => openReview(r.id, 'reject')}
+                          disabled={actingId === r.id}
+                          className="text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
+                          title="رفض"
+                        >
+                          <X size={16} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {review && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
+          onClick={closeReview}
+          role="presentation"
+        >
+          <div
+            className="card-base glass w-full max-w-md p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="review-dialog-title"
+          >
+            <h3 id="review-dialog-title" className="text-lg font-black text-[#2d1a1a]">
+              {review.action === 'approve' ? 'تأكيد الموافقة' : 'تأكيد الرفض'}
+            </h3>
+            <p className="text-sm text-[#8a6a6a] leading-relaxed">
+              {review.action === 'approve'
+                ? 'سيتم تفعيل اشتراك المستخدم بعد الموافقة على الطلب.'
+                : 'سيتم رفض طلب الدفع. يمكنك إضافة سبب اختياري للمستخدم.'}
+            </p>
+            <div className="space-y-2">
+              <label htmlFor="admin-notes" className="text-sm font-semibold text-[#2d1a1a]">
+                ملاحظات الإدارة (اختياري)
+              </label>
+              <textarea
+                id="admin-notes"
+                value={adminNotes}
+                onChange={(e) => setAdminNotes(e.target.value)}
+                disabled={isSubmitting}
+                rows={3}
+                placeholder={
+                  review.action === 'approve'
+                    ? 'ملاحظة للمستخدم...'
+                    : 'سبب الرفض...'
+                }
+                className="w-full px-3 py-2.5 rounded-xl border border-[#fad4db]/60 bg-white text-sm text-[#2d1a1a] focus:outline-none focus:border-[#e8294a]/50 disabled:opacity-60 resize-none"
+              />
+            </div>
+            <div className="flex items-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={handleReviewSubmit}
+                disabled={isSubmitting}
+                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-60 ${
+                  review.action === 'approve'
+                    ? 'bg-emerald-600 hover:bg-emerald-700'
+                    : 'bg-red-500 hover:bg-red-600'
+                }`}
+              >
+                {isSubmitting
+                  ? 'جارى التنفيذ...'
+                  : review.action === 'approve'
+                    ? 'موافقة'
+                    : 'رفض'}
+              </button>
+              <button
+                type="button"
+                onClick={closeReview}
+                disabled={isSubmitting}
+                className="flex-1 btn-outline-rose py-2.5 text-sm disabled:opacity-60"
+              >
+                إلغاء
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
