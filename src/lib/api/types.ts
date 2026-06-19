@@ -22,18 +22,46 @@ export interface SignedUrlResponse {
   url: string;
 }
 
-export interface PaymentRecord {
-  id: string;
-  userId: string;
-  stripeSessionId: string;
-  amount: number;
-  currency: string;
-  status: string;
-  createdAt: string;
+export type PaymentMethod =
+  | 'BANK_TRANSFER'
+  | 'INSTAPAY'
+  | 'VODAFONE_CASH'
+  | 'ORANGE_CASH'
+  | 'ETISALAT_CASH';
+
+export type PaymentStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface PaymentMethodSettingRecord {
+  method: PaymentMethod;
+  displayName: string;
+  accountName?: string;
+  accountNumber?: string;
+  instructions?: string;
+  isActive: boolean;
 }
 
-export interface CheckoutResponse {
-  url: string;
+export type PaymentMethodSettingUpdate = {
+  displayName?: string;
+  accountName?: string | null;
+  accountNumber?: string | null;
+  instructions?: string | null;
+  isActive?: boolean;
+};
+
+export interface PaymentRequestRecord {
+  id: string;
+  userId: string;
+  userEmail?: string;
+  method: PaymentMethod;
+  status: PaymentStatus;
+  createdAt: string;
+  reviewedAt?: string;
+  adminNotes?: string;
+}
+
+export interface SubmitPaymentRequestResponse {
+  id: string;
+  status: PaymentStatus;
 }
 
 export interface PaginatedUsers {
