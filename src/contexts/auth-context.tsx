@@ -2,9 +2,11 @@
 
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { User } from '@/lib/api/types';
-import { authApi } from '@/lib/api/auth';
+import { authApi, AuthUserResponse } from '@/lib/api/auth';
 import { setClientToken, setClientClearAuth } from '@/lib/api/client';
 import { useRouter } from 'next/navigation';
+
+const COOKIE_SESSION = 'cookie';
 
 interface AuthState {
   user: User | null;
@@ -40,10 +42,27 @@ interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  refreshAuth: () => Promise<void>;
+  refreshAuth: () => Promise<User | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+function toUser(data: AuthUserResponse, email: string): User {
+  return { id: data.userId, email, role: data.role, isPaid: data.isPaid };
+}
+
+async function fetchCurrentUser(): Promise<User | null> {
+  try {
+    await authApi.refresh();
+  } catch {
+    return null;
+  }
+  try {
+    return await authApi.me();
+  } catch {
+    return null;
+  }
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -54,106 +73,66 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isAuthenticated: false,
   });
 
+  const applySession = useCallback((user: User) => {
+    dispatch({ type: 'SET_AUTH', payload: { user, accessToken: COOKIE_SESSION } });
+    setClientToken(COOKIE_SESSION);
+  }, []);
+
   const clearAuth = useCallback(() => {
     dispatch({ type: 'CLEAR_AUTH' });
     setClientToken(null);
   }, []);
 
-  // Register clearAuth with the API client so it can clear state on 401
   useEffect(() => {
     setClientClearAuth(clearAuth);
   }, [clearAuth]);
 
-  // Restore session on mount
   useEffect(() => {
     const restore = async () => {
-      try {
-        const res = await fetch('/api/auth/refresh');
-        if (res.ok) {
-          const { accessToken } = await res.json();
-          // Decode user from token (base64 decode the payload)
-          const payload = JSON.parse(atob(accessToken.split('.')[1]));
-          const user: User = {
-            id: payload.sub,
-            email: payload.email,
-            role: payload.role,
-            isPaid: payload.isPaid ?? false,
-          };
-          dispatch({ type: 'SET_AUTH', payload: { user, accessToken } });
-          setClientToken(accessToken);
-        } else {
-          dispatch({ type: 'CLEAR_AUTH' });
-        }
-      } catch {
-        dispatch({ type: 'CLEAR_AUTH' });
-      }
+      const user = await fetchCurrentUser();
+      if (user) applySession(user);
+      else dispatch({ type: 'CLEAR_AUTH' });
     };
     restore();
-  }, []);
+  }, [applySession]);
 
   const login = useCallback(async (email: string, password: string) => {
-    const data = await authApi.login(email, password);
-    // Store refresh token in httpOnly cookie
-    await fetch('/api/auth/set-cookie', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken: data.refreshToken }),
-    });
-    // Decode user from access token
-    const payload = JSON.parse(atob(data.accessToken.split('.')[1]));
-    const user: User = {
-      id: payload.sub,
-      email: payload.email,
-      role: payload.role,
-      isPaid: payload.isPaid ?? false,
-    };
-    dispatch({ type: 'SET_AUTH', payload: { user, accessToken: data.accessToken } });
-    setClientToken(data.accessToken);
-  }, []);
+    await authApi.login(email, password);
+    const user = await authApi.me();
+    applySession(user);
+  }, [applySession]);
 
   const register = useCallback(async (email: string, password: string) => {
-    const data = await authApi.register(email, password);
-    await fetch('/api/auth/set-cookie', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken: data.refreshToken }),
-    });
-    const payload = JSON.parse(atob(data.accessToken.split('.')[1]));
-    const user: User = {
-      id: payload.sub,
-      email: payload.email,
-      role: payload.role,
-      isPaid: payload.isPaid ?? false,
-    };
-    dispatch({ type: 'SET_AUTH', payload: { user, accessToken: data.accessToken } });
-    setClientToken(data.accessToken);
-  }, []);
+    await authApi.register(email, password);
+    const user = await authApi.me();
+    applySession(user);
+  }, [applySession]);
 
   const logout = useCallback(async () => {
     clearAuth();
-    await fetch('/api/auth/clear-cookie', { method: 'POST' });
+    try {
+      await authApi.logout();
+    } catch {
+      // ignore
+    }
     router.push('/');
   }, [clearAuth, router]);
 
   const refreshAuth = useCallback(async () => {
-    try {
-      const res = await fetch('/api/auth/refresh');
-      if (res.ok) {
-        const { accessToken } = await res.json();
-        const payload = JSON.parse(atob(accessToken.split('.')[1]));
-        const user: User = {
-          id: payload.sub,
-          email: payload.email,
-          role: payload.role,
-          isPaid: payload.isPaid ?? false,
-        };
-        dispatch({ type: 'SET_AUTH', payload: { user, accessToken } });
-        setClientToken(accessToken);
+    const user = await fetchCurrentUser();
+    if (user) applySession(user);
+    return user;
+  }, [applySession]);
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && state.isAuthenticated) {
+        refreshAuth();
       }
-    } catch {
-      // silently fail
-    }
-  }, []);
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [state.isAuthenticated, refreshAuth]);
 
   return (
     <AuthContext.Provider value={{ ...state, login, register, logout, refreshAuth }}>
