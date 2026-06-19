@@ -5,14 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import UsersTab from './components/UsersTab';
 import PaymentsTab from './components/PaymentsTab';
+import PaymentMethodsTab from './components/PaymentMethodsTab';
 import FilesTab from './components/FilesTab';
-import { Users, CreditCard, FileText } from 'lucide-react';
+import { Users, CreditCard, FileText, Wallet } from 'lucide-react';
 
-type Tab = 'users' | 'payments' | 'files';
+type Tab = 'users' | 'payments' | 'paymentMethods' | 'files';
 
 const TABS = [
   { id: 'users' as Tab, label: 'المستخدمون', icon: Users },
-  { id: 'payments' as Tab, label: 'المدفوعات', icon: CreditCard },
+  { id: 'payments' as Tab, label: 'طلبات الدفع', icon: CreditCard },
+  { id: 'paymentMethods' as Tab, label: 'طرق الدفع', icon: Wallet },
   { id: 'files' as Tab, label: 'الملفات', icon: FileText },
 ];
 
@@ -68,6 +70,7 @@ export default function DashboardPage() {
         <div className="card-base glass p-6">
           {activeTab === 'users' && <UsersTab />}
           {activeTab === 'payments' && <PaymentsTab />}
+          {activeTab === 'paymentMethods' && <PaymentMethodsTab />}
           {activeTab === 'files' && <FilesTab />}
         </div>
       </div>

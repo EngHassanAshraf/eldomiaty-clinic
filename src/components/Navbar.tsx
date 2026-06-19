@@ -5,22 +5,68 @@ import Image from "next/image";
 import { CLINIC } from "@/lib/data";
 import { useLocale } from "@/lib/LocaleContext";
 import { UI } from "@/lib/i18n";
+import { useAuth } from "@/contexts/auth-context";
 
-const NAV_LINKS = [
-  { href: "#home",         ar: "الرئيسية",   en: "Home" },
-  { href: "#about",        ar: "عن الدكتور", en: "About" },
-  { href: "#services",     ar: "الخدمات",    en: "Services" },
-  { href: "#branches",     ar: "فروعنا",    en: "Branches" },
-  { href: "#contact",      ar: "اتصل بنا",   en: "Contact" },
+type NavLink = { href: string; ar: string; en: string };
+
+const BASE_NAV_LINKS: NavLink[] = [
+  { href: "#home",     ar: "الرئيسية",   en: "Home" },
+  { href: "#about",    ar: "عن الدكتور", en: "About" },
+  { href: "#services", ar: "الخدمات",    en: "Services" },
+  { href: "#branches", ar: "فروعنا",     en: "Branches" },
+  { href: "#contact",  ar: "اتصل بنا",   en: "Contact" },
 ];
+
+const GUEST_LINKS: NavLink[] = [
+  { href: "/login",    ar: "تسجيل دخول", en: "Login" },
+  { href: "/register", ar: "إنشاء حساب", en: "Register" },
+];
+
+const AUTH_LINKS: NavLink[] = [
+  { href: "/files",              ar: "الملفات",      en: "Files" },
+  { href: "/payment/request",    ar: "طلب اشتراك",   en: "Payment Request" },
+  { href: "/payment/my-requests", ar: "طلباتي",      en: "My Requests" },
+];
+
+const ADMIN_LINK: NavLink = {
+  href: "/dashboard",
+  ar: "لوحة التحكم",
+  en: "Dashboard",
+};
 
 export default function Navbar() {
   const { locale, setLocale } = useLocale();
+  const { user, isLoading, isAuthenticated, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen]         = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const isRTL = locale === "ar";
   const t     = UI[locale];
+
+  const authLinks: NavLink[] = isLoading
+    ? []
+    : isAuthenticated
+      ? user?.role === "ADMIN"
+        ? [...AUTH_LINKS, ADMIN_LINK]
+        : AUTH_LINKS
+      : GUEST_LINKS;
+
+  const navLinks = [...BASE_NAV_LINKS, ...authLinks];
+
+  const toggleLocale = () => setLocale(locale === "ar" ? "en" : "ar");
+  const closeMenu    = () => setOpen(false);
+
+  const handleLogout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    closeMenu();
+    try {
+      await logout();
+    } finally {
+      setLoggingOut(false);
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -34,9 +80,6 @@ export default function Navbar() {
     window.addEventListener("resize", onResize, { passive: true });
     return () => window.removeEventListener("resize", onResize);
   }, []);
-
-  const toggleLocale = () => setLocale(locale === "ar" ? "en" : "ar");
-  const closeMenu    = () => setOpen(false);
 
   return (
     <header role="banner" dir={isRTL ? "rtl" : "ltr"} className="fixed top-0 inset-x-0 z-50 px-4 pt-3 pb-1">
@@ -65,7 +108,7 @@ export default function Navbar() {
             <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-[#E91E63]/20 group-hover:ring-[#E91E63]/50 transition-all duration-200">
               <Image src="/new-logo.png" alt={`شعار ${CLINIC.name}`} fill className="object-contain" priority />
             </div>
-            <div className="hidden sm:block leading-tight">
+            <div className="sm:block leading-tight">
               <p className="text-sm font-bold text-gray-800 group-hover:text-[#E91E63] transition-colors duration-200">
                 {isRTL ? "د. محمد الدمياطي" : "Dr. Eldomiaty"}
               </p>
@@ -77,7 +120,7 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-1" aria-label={t.nav}>
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -86,10 +129,29 @@ export default function Navbar() {
                 {link[locale]}
               </a>
             ))}
+            {isAuthenticated && !isLoading && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="px-3.5 py-2 text-sm font-medium text-gray-600 rounded-full hover:text-[#E91E63] hover:bg-[#E91E63]/8 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[#E91E63] focus-visible:outline-offset-2 disabled:opacity-60"
+              >
+                {loggingOut ? (isRTL ? "جارى الخروج..." : "Logging out...") : isRTL ? "تسجيل الخروج" : "Logout"}
+              </button>
+            )}
           </nav>
 
           {/* Desktop actions */}
           <div className="hidden lg:flex items-center gap-2 shrink-0">
+            {isAuthenticated && user && !isLoading && (
+              <span
+                className="hidden xl:block max-w-[140px] truncate text-xs font-medium text-gray-500 px-2"
+                dir="ltr"
+                title={user.email}
+              >
+                {user.email}
+              </span>
+            )}
             <button
               onClick={toggleLocale}
               aria-label={t.langSwitch}
@@ -130,11 +192,16 @@ export default function Navbar() {
         role="navigation"
         aria-label={t.nav}
         className={`lg:hidden max-w-6xl mx-auto mt-2 rounded-2xl bg-white border border-gray-100 shadow-[0_8px_32px_rgba(0,0,0,0.10)] overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+          open ? "max-h-[560px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
         <div className="px-4 py-3 space-y-1">
-          {NAV_LINKS.map((link) => (
+          {isAuthenticated && user && !isLoading && (
+            <p className="px-4 py-2 text-xs font-medium text-gray-500 truncate" dir="ltr">
+              {user.email}
+            </p>
+          )}
+          {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -144,6 +211,16 @@ export default function Navbar() {
               {link[locale]}
             </a>
           ))}
+          {isAuthenticated && !isLoading && (
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="flex w-full items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:text-[#E91E63] hover:bg-[#E91E63]/8 transition-all duration-200 disabled:opacity-60"
+            >
+              {loggingOut ? (isRTL ? "جارى الخروج..." : "Logging out...") : isRTL ? "تسجيل الخروج" : "Logout"}
+            </button>
+          )}
           <div className="h-px bg-gray-100 my-2" />
           <div className="flex items-center gap-2 px-1 pb-1">
             <button
