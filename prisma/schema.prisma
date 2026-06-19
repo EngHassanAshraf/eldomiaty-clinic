@@ -1,0 +1,220 @@
+// Eldomiaty Clinic — Database Schema
+// Provider: PostgreSQL (Supabase)
+// ORM: Prisma
+//
+// Design decisions documented in docs/ERD.md
+// Do not run migrations until explicitly approved.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  USER
+}
+
+/// Offline payment channel selected by the user when submitting proof.
+/// Add new values via migration when supporting additional wallets.
+enum PaymentMethod {
+  BANK_TRANSFER
+  INSTAPAY
+  VODAFONE_CASH
+  ORANGE_CASH
+  ETISALAT_CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// User
+// ─────────────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique @db.VarChar(320)
+  passwordHash String   @map("password_hash")
+  role         Role     @default(USER)
+  isPaid       Boolean  @default(false) @map("is_paid")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  sessions                UserSession[]
+  paymentRequests         PaymentRequest[] @relation("PaymentRequestSubmitter")
+  reviewedPaymentRequests PaymentRequest[] @relation("PaymentRequestReviewer")
+  accessLogs              MedicalFileAccessLog[]
+  auditLogs               AuditLog[]
+
+  @@index([role])
+  @@index([isPaid])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UserSession — refresh token sessions (rotation-safe)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model UserSession {
+  id               String   @id @default(cuid())
+  userId           String   @map("user_id")
+  refreshTokenHash String   @unique @map("refresh_token_hash") @db.VarChar(128)
+  deviceInfo       String?  @map("device_info") @db.VarChar(512)
+  ipAddress        String?  @map("ip_address") @db.VarChar(45)
+  expiresAt        DateTime @map("expires_at")
+  lastActivityAt   DateTime @default(now()) @map("last_activity_at")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([userId, expiresAt])
+  @@map("user_sessions")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// File — medical PDF metadata (binary in Supabase Storage)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model File {
+  id                 String   @id @default(cuid())
+  title              String   @db.VarChar(255)
+  description        String?  @db.Text
+  storagePath        String   @unique @map("storage_path") @db.VarChar(1024)
+  previewStoragePath String?  @map("preview_storage_path") @db.VarChar(1024)
+  isPaidContent      Boolean  @default(false) @map("is_paid_content")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  accessLogs MedicalFileAccessLog[]
+
+  @@index([isPaidContent])
+  @@index([createdAt(sort: Desc)])
+  @@map("files")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PaymentRequest — manual payment verification workflow
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PaymentRequest {
+  id            String        @id @default(cuid())
+  userId        String        @map("user_id")
+  method        PaymentMethod
+  /// Supabase Storage object key/path — signed URLs generated at read time.
+  screenshotUrl String        @map("screenshot_url") @db.VarChar(1024)
+  status        PaymentStatus @default(PENDING)
+  adminNotes         String?       @map("admin_notes") @db.Text
+  reviewedAt         DateTime?     @map("reviewed_at")
+  reviewedByAdminId  String?       @map("reviewed_by_admin_id")
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @updatedAt @map("updated_at")
+
+  user            User  @relation("PaymentRequestSubmitter", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedByAdmin User? @relation("PaymentRequestReviewer", fields: [reviewedByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([status, createdAt(sort: Desc)])
+  @@index([userId, status])
+  @@index([method])
+  @@index([reviewedByAdminId])
+  @@map("payment_requests")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PaymentMethodSetting — admin-managed payment destination details
+// ─────────────────────────────────────────────────────────────────────────────
+
+model PaymentMethodSetting {
+  id            String        @id @default(cuid())
+
+  method        PaymentMethod @unique
+
+  displayName   String        @map("display_name") @db.VarChar(120)
+  accountName   String?       @map("account_name") @db.VarChar(255)
+  accountNumber String?       @map("account_number") @db.VarChar(255)
+  instructions  String?       @db.Text
+  isActive      Boolean       @default(true) @map("is_active")
+
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@index([isActive])
+
+  @@map("payment_method_settings")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MedicalFileAccessLog — per-view tracking for medical PDFs
+// ─────────────────────────────────────────────────────────────────────────────
+
+model MedicalFileAccessLog {
+  id       String   @id @default(cuid())
+  userId   String   @map("user_id")
+  fileId   String   @map("file_id")
+  viewedAt DateTime @default(now()) @map("viewed_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  file File @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([fileId])
+  @@index([viewedAt(sort: Desc)])
+  @@index([userId, fileId])
+  @@index([userId, viewedAt(sort: Desc)])
+  @@map("medical_file_access_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AuditLog — centralized audit trail (user + admin actions)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?  @map("user_id")
+  action     String   @db.VarChar(64)
+  entityType String?  @map("entity_type") @db.VarChar(64)
+  entityId   String?  @map("entity_id") @db.VarChar(64)
+  metadata   Json?
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SystemSetting — key/value application configuration
+// ─────────────────────────────────────────────────────────────────────────────
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique @db.VarChar(128)
+  value     Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_settings")
+}
