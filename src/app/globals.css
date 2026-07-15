@@ -35,7 +35,7 @@
   html { scroll-behavior: smooth; }
 
   body {
-    font-family: "Tajawal", "Segoe UI", sans-serif;
+    font-family: var(--font-tajawal), "Segoe UI", sans-serif;
     direction: rtl;
     background: var(--ivory);
     color: var(--text-main);

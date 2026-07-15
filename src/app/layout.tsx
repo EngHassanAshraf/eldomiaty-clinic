@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Tajawal } from "next/font/google";
 import "./globals.css";
 import SchemaOrg from "@/components/SchemaOrg";
 import { LocaleProvider } from "@/lib/LocaleContext";
@@ -10,6 +11,13 @@ import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
 import { getSystemSetting, parseMaintenanceMode } from '@/lib/settings/system-settings';
 import MaintenancePage from '@/app/maintenance/page';
+
+const tajawal = Tajawal({
+  subsets: ['arabic', 'latin'],
+  weight: ['300', '400', '500', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-tajawal',
+});
 
 export const metadata: Metadata = {
   title: "دكتور محمد الدمياطى - اشطر دكتور نساء وتوليد وحقن مجهرى",
@@ -49,12 +57,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="ar" dir="rtl">
       <head>
         <link rel="icon" href="/favicon-transparence-bg.jpg" type="image/jpg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap"
-          rel="stylesheet"
-        />
         <SchemaOrg />
         {/* Facebook Pixel */}
         <script
@@ -68,7 +70,7 @@ fbq('init','502846864259282');fbq('track','PageView');`,
           }}
         />
       </head>
-      <body>
+      <body className={tajawal.variable}>
         <AuthProvider initialUser={user} initialHasRefreshCookie={initialHasRefreshCookie}>
           <Toaster position="top-center" />
           <LocaleProvider>

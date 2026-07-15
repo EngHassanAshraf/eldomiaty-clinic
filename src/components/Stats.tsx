@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { STATS_I18N } from "@/lib/i18n";
+import { computeSequence } from "@/lib/computeSequence";
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
   const [count, setCount] = useState(0);
@@ -14,12 +15,13 @@ function CountUp({ target, suffix }: { target: number; suffix: string }) {
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
         started.current = true;
-        const duration = 1600, steps = 50, inc = target / steps;
-        let cur = 0;
+        const duration = 1600, steps = 50;
+        const sequence = computeSequence(target, steps);
+        let index = 0;
         const timer = setInterval(() => {
-          cur = Math.min(cur + inc, target);
-          setCount(Math.round(cur));
-          if (cur >= target) clearInterval(timer);
+          setCount(sequence[index]);
+          index++;
+          if (index >= sequence.length) clearInterval(timer);
         }, duration / steps);
       }
     }, { threshold: 0.5 });

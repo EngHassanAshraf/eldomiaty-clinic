@@ -6,6 +6,10 @@ import { generateRefreshToken, hashRefreshToken, refreshExpiresAt } from './toke
 
 export type AuthTokens = { accessToken: string; refreshToken: string };
 
+export type IssueResult = AuthTokens & {
+  user: { id: string; email: string; role: Role; isPaid: boolean };
+};
+
 type SessionMeta = { deviceInfo?: string; ipAddress?: string };
 
 // ---------------------------------------------------------------------------
@@ -15,7 +19,7 @@ type SessionMeta = { deviceInfo?: string; ipAddress?: string };
 async function issueTokens(
   user: { id: string; email: string; role: Role; isPaid: boolean },
   meta?: SessionMeta
-): Promise<AuthTokens> {
+): Promise<IssueResult> {
   const refreshToken = generateRefreshToken();
   await prisma.userSession.create({
     data: {
@@ -27,7 +31,7 @@ async function issueTokens(
     },
   });
   const accessToken = await signAccessToken(user);
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, user };
 }
 
 type RotateResult = {
@@ -87,7 +91,7 @@ export async function register(
   email: string,
   password: string,
   meta?: SessionMeta
-): Promise<AuthTokens> {
+): Promise<IssueResult> {
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new Error('Email already registered');
 
@@ -101,7 +105,7 @@ export async function login(
   email: string,
   password: string,
   meta?: SessionMeta
-): Promise<AuthTokens> {
+): Promise<IssueResult> {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
     throw new Error('Invalid credentials');

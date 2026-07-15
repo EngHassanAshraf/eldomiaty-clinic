@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { register } from '@/lib/auth/auth';
 import { setAuthCookies } from '@/lib/auth/cookies';
-import { verifyAccessToken } from '@/lib/auth/jwt';
 import { getSystemSetting, parseAllowRegistrations } from '@/lib/settings/system-settings';
 
 export async function POST(req: NextRequest) {
@@ -16,8 +15,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
     const tokens = await register(email, password);
-    const user = await verifyAccessToken(tokens.accessToken);
-    const res = NextResponse.json({ userId: user.userId, role: user.role, isPaid: user.isPaid });
+    const res = NextResponse.json({
+      userId: tokens.user.id,
+      role: tokens.user.role,
+      isPaid: tokens.user.isPaid,
+    });
     return setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Registration failed';
