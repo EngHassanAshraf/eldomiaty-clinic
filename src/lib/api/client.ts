@@ -4,6 +4,7 @@ const COOKIE_SESSION = 'cookie';
 
 let _accessToken: string | null = null;
 let _clearAuth: (() => void) | null = null;
+let refreshPromise: Promise<boolean> | null = null;
 
 export function setClientToken(token: string | null) {
   _accessToken = token;
@@ -47,11 +48,20 @@ export async function apiFetch<T>(
 
   if (response.status === 401 && !skipAuth) {
     try {
-      const refreshRes = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      if (refreshRes.ok) {
+      if (!refreshPromise) {
+        refreshPromise = fetch('/api/auth/refresh', {
+          method: 'POST',
+          credentials: 'include',
+        })
+          .then((res) => res.ok)
+          .catch(() => false)
+          .finally(() => {
+            refreshPromise = null;
+          });
+      }
+
+      const refreshOk = await refreshPromise;
+      if (refreshOk) {
         setClientToken(COOKIE_SESSION);
 
         const retryHeaders = { ...headers };
@@ -65,7 +75,7 @@ export async function apiFetch<T>(
 
         if (retryResponse.status === 401) {
           _clearAuth?.();
-          if (typeof window !== 'undefined') window.location.href = '/login';
+          if (typeof window !== 'undefined') window.dispatchEvent(new Event('auth:expired'));
           throw new ApiError('Session expired', 401);
         }
 
@@ -81,7 +91,7 @@ export async function apiFetch<T>(
     }
 
     _clearAuth?.();
-    if (typeof window !== 'undefined') window.location.href = '/login';
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event('auth:expired'));
     throw new ApiError('Session expired', 401);
   }
 
