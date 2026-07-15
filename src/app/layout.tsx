@@ -4,7 +4,12 @@ import SchemaOrg from "@/components/SchemaOrg";
 import { LocaleProvider } from "@/lib/LocaleContext";
 import LocaleWrapper from "@/components/LocaleWrapper";
 import { AuthProvider } from "@/contexts/auth-context";
+import { getServerUser } from "@/lib/auth/server-session";
+import { cookies } from "next/headers";
 import { Toaster } from "react-hot-toast";
+import Navbar from "@/components/Navbar";
+import { getSystemSetting, parseMaintenanceMode } from '@/lib/settings/system-settings';
+import MaintenancePage from '@/app/maintenance/page';
 
 export const metadata: Metadata = {
   title: "دكتور محمد الدمياطى - اشطر دكتور نساء وتوليد وحقن مجهرى",
@@ -25,7 +30,21 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const user = await getServerUser();
+  const cookieStore = await cookies();
+  const initialHasRefreshCookie = cookieStore.has("refresh_token");
+
+  // Maintenance mode check on the server.
+  // Fail open: if the DB is unreachable, do not lock everyone out.
+  let isMaintenance = false;
+  try {
+    const maintenance = parseMaintenanceMode(await getSystemSetting('maintenance_mode'));
+    isMaintenance = maintenance.enabled && user?.role !== 'ADMIN';
+  } catch {
+    // DB unavailable — treat as not in maintenance so the site remains accessible.
+  }
+
   return (
     <html lang="ar" dir="rtl">
       <head>
@@ -50,11 +69,18 @@ fbq('init','502846864259282');fbq('track','PageView');`,
         />
       </head>
       <body>
-        <AuthProvider>
+        <AuthProvider initialUser={user} initialHasRefreshCookie={initialHasRefreshCookie}>
           <Toaster position="top-center" />
           <LocaleProvider>
             <LocaleWrapper>
-              {children}
+              {isMaintenance ? (
+                <MaintenancePage />
+              ) : (
+                <>
+                  <Navbar />
+                  {children}
+                </>
+              )}
             </LocaleWrapper>
           </LocaleProvider>
         </AuthProvider>
