@@ -12,7 +12,7 @@ import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
 
 export default function MyPaymentRequestsPage() {
-  const { accessToken, isLoading: authLoading, refreshAuth } = useAuth();
+  const { accessToken, isLoading: authLoading } = useAuth();
   const router = useRouter();
   const [requests, setRequests] = useState<PaymentRequestRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +26,6 @@ export default function MyPaymentRequestsPage() {
     }
     const load = async () => {
       try {
-        await refreshAuth();
         const data = await paymentRequestsApi.listMine(accessToken);
         setRequests(data);
         setError(null);
@@ -39,7 +38,7 @@ export default function MyPaymentRequestsPage() {
       }
     };
     load();
-  }, [accessToken, authLoading, refreshAuth]);
+  }, [accessToken, authLoading]);
 
   if (authLoading || loading) {
     return (

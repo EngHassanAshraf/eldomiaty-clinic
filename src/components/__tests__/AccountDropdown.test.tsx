@@ -10,6 +10,7 @@ describe('AccountDropdown', () => {
       createElement(AccountDropdown, {
         displayName: 'Alice',
         items: getAccountMenuItems('USER', 'en'),
+        locale: 'en',
         initialOpen: true,
       })
     );

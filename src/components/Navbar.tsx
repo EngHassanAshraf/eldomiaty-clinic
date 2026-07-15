@@ -152,6 +152,7 @@ export default function Navbar() {
               <AccountDropdown
                 displayName={displayName}
                 items={accountItems}
+                locale={locale}
                 onAction={(item) => {
                   if (item.action === "logout") {
                     void handleLogout();

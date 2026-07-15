@@ -10,17 +10,16 @@ import toast from 'react-hot-toast';
 
 export default function FileDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { isLoading: authLoading, refreshAuth } = useAuth();
+  const { isLoading: authLoading, user: authUser } = useAuth();
   const [file, setFile] = useState<FileRecord | null>(null);
   const [userIsPaid, setUserIsPaid] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (authLoading) return;
+    setUserIsPaid(authUser?.isPaid ?? false);
     const load = async () => {
       try {
-        const user = await refreshAuth();
-        setUserIsPaid(user?.isPaid ?? false);
         const data = await filesApi.getFile(id);
         setFile(data);
       } catch (err) {
@@ -31,7 +30,7 @@ export default function FileDetailPage({ params }: { params: Promise<{ id: strin
       }
     };
     load();
-  }, [id, authLoading, refreshAuth]);
+  }, [id, authLoading, authUser?.isPaid]);
 
   if (authLoading || loading) {
     return (

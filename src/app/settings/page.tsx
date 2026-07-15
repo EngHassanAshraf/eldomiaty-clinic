@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { Settings2, ShieldCheck, Building2, MessageCircleMore, Save, ToggleLeft, ToggleRight } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useLocale } from '@/lib/LocaleContext';
 
 interface FormState {
@@ -59,8 +58,7 @@ function TextField({ label, value, onChange, placeholder }: { label: string; val
 }
 
 export default function SettingsPage() {
-  const router = useRouter();
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { isLoading, user } = useRequireAuth({ requiredRole: 'ADMIN', redirectTo: '/' });
   const { locale } = useLocale();
   const isRTL = locale === 'ar';
   const [form, setForm] = useState<FormState>({
@@ -70,12 +68,6 @@ export default function SettingsPage() {
     whatsappNumber: '+201066746007',
   });
   const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && (!isAuthenticated || user?.role !== 'ADMIN')) {
-      router.replace('/');
-    }
-  }, [isAuthenticated, isLoading, router, user?.role]);
 
   if (isLoading || !user) {
     return null;

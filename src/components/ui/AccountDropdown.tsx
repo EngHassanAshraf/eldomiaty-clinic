@@ -8,11 +8,12 @@ import type { NavbarMenuItem } from "@/components/navbar-menu";
 interface AccountDropdownProps {
   displayName: string;
   items: NavbarMenuItem[];
+  locale: 'ar' | 'en';
   initialOpen?: boolean;
   onAction?: (item: NavbarMenuItem) => void | Promise<void>;
 }
 
-export function AccountDropdown({ displayName, items, initialOpen = false, onAction }: AccountDropdownProps) {
+export function AccountDropdown({ displayName, items, locale, initialOpen = false, onAction }: AccountDropdownProps) {
   const [isOpen, setIsOpen] = useState(initialOpen);
 
   return (
@@ -32,7 +33,9 @@ export function AccountDropdown({ displayName, items, initialOpen = false, onAct
       {isOpen ? (
         <div className="absolute right-0 z-50 mt-2 w-64 rounded-2xl border border-gray-200 bg-white p-2 shadow-[0_12px_36px_rgba(0,0,0,0.14)]">
           <div className="rounded-xl border border-[#F6DCE7] bg-[#FFF7FA] px-3 py-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3A8DDE]">Account</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#3A8DDE]">
+              {locale === 'ar' ? 'الحساب' : 'Account'}
+            </p>
             <p className="mt-1 text-sm font-semibold text-gray-800">{displayName}</p>
           </div>
           <div className="mt-2 flex flex-col gap-1">
@@ -48,7 +51,7 @@ export function AccountDropdown({ displayName, items, initialOpen = false, onAct
                     }}
                     className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-[#FDE8EF] hover:text-[#E91E63]"
                   >
-                    <span>{item.label.en}</span>
+                    <span>{item.label[locale]}</span>
                   </button>
                 );
               }
@@ -60,7 +63,7 @@ export function AccountDropdown({ displayName, items, initialOpen = false, onAct
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-[#FDE8EF] hover:text-[#E91E63]"
                 >
-                  <span>{item.label.en}</span>
+                  <span>{item.label[locale]}</span>
                 </Link>
               );
             })}

@@ -28,7 +28,9 @@ export async function middleware(req: NextRequest) {
   const isProtectedPage =
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/files') ||
-    pathname.startsWith('/payment');
+    pathname.startsWith('/payment') ||
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/settings');
 
   if (!isProtectedPage) {
     return NextResponse.next();
@@ -39,10 +41,12 @@ export async function middleware(req: NextRequest) {
     return loginRedirect(req, pathname);
   }
 
-  const isDashboard = pathname.startsWith('/dashboard');
   const accessToken = req.cookies.get('access_token')?.value;
 
-  if (isDashboard) {
+  const isDashboard = pathname.startsWith('/dashboard');
+  const isSettings  = pathname.startsWith('/settings');
+
+  if (isDashboard || isSettings) {
     if (!accessToken) {
       return loginRedirect(req, pathname);
     }
@@ -65,5 +69,7 @@ export const config = {
     '/dashboard/:path*',
     '/files/:path*',
     '/payment/:path*',
+    '/profile/:path*',
+    '/settings/:path*',
   ],
 };
