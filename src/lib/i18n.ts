@@ -84,7 +84,7 @@ export const UI = {
     menuOpen: "فتح القائمة",
     menuClose: "إغلاق القائمة",
     langSwitch: "تغيير اللغة",
-    cta: "احجز موعد",
+    cta: "احجز موعدك",
     ctaFull: "احجز موعدك الآن",
     ctaAria: "احجز موعدك عبر واتساب",
     callUs: "اتصل بنا",
