@@ -2,17 +2,17 @@ import { apiFetch } from './client';
 import { FileRecord, SignedUrlResponse } from './types';
 
 export const filesApi = {
-  getFiles: (_token?: string | null) => apiFetch<FileRecord[]>('/files'),
+  getFiles: () => apiFetch<FileRecord[]>('/files'),
 
-  getFile: (id: string, _token?: string | null) => apiFetch<FileRecord>(`/files/${id}`),
+  getFile: (id: string) => apiFetch<FileRecord>(`/files/${id}`),
 
-  getPreview: (id: string, _token?: string | null) =>
+  getPreview: (id: string) =>
     apiFetch<SignedUrlResponse>(`/files/${id}/preview`),
 
-  getFullAccess: (id: string, _token?: string | null) =>
+  getFullAccess: (id: string) =>
     apiFetch<SignedUrlResponse>(`/files/${id}/full-access`),
 
-  upload: (formData: FormData, _token?: string | null) =>
+  upload: (formData: FormData) =>
     apiFetch<FileRecord>('/files', {
       method: 'POST',
       body: formData,
@@ -20,14 +20,13 @@ export const filesApi = {
 
   update: (
     id: string,
-    data: Partial<{ title: string; description: string; isPaidContent: boolean }>,
-    _token?: string | null
+    data: Partial<{ title: string; description: string; isPaidContent: boolean }>
   ) =>
     apiFetch<FileRecord>(`/files/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
 
-  delete: (id: string, _token?: string | null) =>
+  delete: (id: string) =>
     apiFetch<void>(`/files/${id}`, { method: 'DELETE' }),
 };

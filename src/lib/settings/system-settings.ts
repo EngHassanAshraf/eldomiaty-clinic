@@ -8,13 +8,6 @@ export async function getSystemSetting(key: string): Promise<unknown | null> {
   return row?.value ?? null;
 }
 
-export type MaintenanceModeSetting =
-  | boolean
-  | {
-      enabled: boolean;
-      message?: string;
-    };
-
 export function parseAllowRegistrations(value: unknown): boolean {
   return value === null ? true : Boolean(value);
 }

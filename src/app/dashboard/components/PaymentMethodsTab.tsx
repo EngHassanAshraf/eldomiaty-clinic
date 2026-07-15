@@ -88,7 +88,7 @@ export default function PaymentMethodsTab() {
     }
     setSaving(true);
     try {
-      const updated = await paymentMethodsApi.update(editing.method, toPayload(form), accessToken);
+      const updated = await paymentMethodsApi.update(editing.method, toPayload(form));
       setMethods((prev) => prev.map((m) => (m.method === updated.method ? updated : m)));
       toast.success('تم تحديث طريقة الدفع');
       closeEdit();

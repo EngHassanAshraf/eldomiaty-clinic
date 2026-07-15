@@ -31,8 +31,8 @@ export default function PdfViewer({ fileId, isPaidContent, userIsPaid }: PdfView
     const load = async () => {
       try {
         const data = needsPaywall
-          ? await filesApi.getPreview(fileId, accessToken)
-          : await filesApi.getFullAccess(fileId, accessToken);
+          ? await filesApi.getPreview(fileId)
+          : await filesApi.getFullAccess(fileId);
         setSignedUrl(data.url);
       } catch (err) {
         const msg = err instanceof ApiError ? err.message : 'فشل تحميل الملف';

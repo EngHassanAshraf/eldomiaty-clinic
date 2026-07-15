@@ -58,7 +58,7 @@ export default function PaymentRequestPage() {
 
     setSubmitting(true);
     try {
-      await paymentRequestsApi.submit(formData, accessToken);
+      await paymentRequestsApi.submit(formData);
       toast.success('تم إرسال الطلب بنجاح');
       router.push('/payment/request/submitted');
     } catch (err) {

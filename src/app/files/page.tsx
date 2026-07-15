@@ -20,7 +20,7 @@ export default function FilesPage() {
     if (authLoading) return;
     const load = async () => {
       try {
-        const data = await filesApi.getFiles(accessToken);
+        const data = await filesApi.getFiles();
         setFiles(data);
       } catch (err) {
         const msg = err instanceof ApiError ? err.message : 'فشل تحميل الملفات';

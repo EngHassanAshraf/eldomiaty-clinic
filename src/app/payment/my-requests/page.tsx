@@ -26,7 +26,7 @@ export default function MyPaymentRequestsPage() {
     }
     const load = async () => {
       try {
-        const data = await paymentRequestsApi.listMine(accessToken);
+        const data = await paymentRequestsApi.listMine();
         setRequests(data);
         setError(null);
       } catch (err) {

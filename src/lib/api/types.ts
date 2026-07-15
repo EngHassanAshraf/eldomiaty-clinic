@@ -6,11 +6,6 @@ export interface User {
   isPaid: boolean;
 }
 
-export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface FileRecord {
   id: string;
   title: string;

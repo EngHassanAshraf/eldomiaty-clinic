@@ -1,5 +1,5 @@
 import { apiFetch } from './client';
-import { ApiError, User } from './types';
+import { ApiError } from './types';
 
 export type AuthUserResponse = {
   userId: string;
@@ -24,8 +24,6 @@ export const authApi = {
 
   refresh: () =>
     apiFetch<{ ok: true }>('/auth/refresh', { method: 'POST', skipAuth: true }),
-
-  me: () => apiFetch<User>('/auth/me'),
 
   logout: () =>
     apiFetch<{ ok: true }>('/auth/logout', { method: 'POST', skipAuth: true }),

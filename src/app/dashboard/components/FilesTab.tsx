@@ -34,7 +34,7 @@ export default function FilesTab() {
 
   const loadFiles = async () => {
     try {
-      const data = await filesApi.getFiles(accessToken);
+      const data = await filesApi.getFiles();
       setFiles(data);
     } catch {
       toast.error('فشل تحميل الملفات');
@@ -65,7 +65,7 @@ export default function FilesTab() {
 
     setUploading(true);
     try {
-      const newFile = await filesApi.upload(formData, accessToken!);
+      const newFile = await filesApi.upload(formData);
       setFiles((prev) => [newFile, ...prev]);
       setTitle(''); setDescription(''); setIsPaidContent(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -83,7 +83,7 @@ export default function FilesTab() {
     const prev = files;
     setFiles((f) => f.filter((x) => x.id !== id)); // optimistic
     try {
-      await filesApi.delete(id, accessToken!);
+      await filesApi.delete(id);
       toast.success('تم حذف الملف');
     } catch (err) {
       setFiles(prev); // revert
@@ -104,7 +104,7 @@ export default function FilesTab() {
     setFiles((f) => f.map((x) => x.id === id ? { ...x, ...updated } : x)); // optimistic
     setEditingId(null);
     try {
-      await filesApi.update(id, updated, accessToken!);
+      await filesApi.update(id, updated);
       toast.success('تم تحديث الملف');
     } catch (err) {
       setFiles(prev); // revert

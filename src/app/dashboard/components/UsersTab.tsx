@@ -21,7 +21,7 @@ export default function UsersTab() {
     if (!accessToken) return;
     setLoading(true);
     try {
-      const result = await usersApi.getUsers(accessToken, page, 20);
+      const result = await usersApi.getUsers(page, 20);
       setData(result);
       setError(null);
     } catch (err) {
@@ -47,7 +47,7 @@ export default function UsersTab() {
     const { user, isPaid } = confirm;
     setActingId(user.id);
     try {
-      const updated = await usersApi.updateIsPaid(user.id, isPaid, accessToken);
+      const updated = await usersApi.updateIsPaid(user.id, isPaid);
       setData((prev) =>
         prev
           ? { ...prev, data: prev.data.map((u) => (u.id === updated.id ? updated : u)) }

@@ -16,14 +16,11 @@ interface AuthState {
 }
 
 type AuthAction =
-  | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_AUTH'; payload: { user: User; accessToken: string } }
   | { type: 'CLEAR_AUTH' };
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
   switch (action.type) {
-    case 'SET_LOADING':
-      return { ...state, isLoading: action.payload };
     case 'SET_AUTH':
       return {
         user: action.payload.user,

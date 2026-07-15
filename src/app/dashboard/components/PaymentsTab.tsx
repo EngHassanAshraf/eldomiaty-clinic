@@ -22,7 +22,7 @@ export default function PaymentsTab() {
   const load = useCallback(async () => {
     if (!accessToken) return;
     try {
-      const data = await paymentRequestsApi.listForAdmin(accessToken);
+      const data = await paymentRequestsApi.listForAdmin();
       setRequests(data);
       setError(null);
     } catch (err) {
@@ -41,7 +41,7 @@ export default function PaymentsTab() {
   const handleViewScreenshot = async (id: string) => {
     if (!accessToken) return;
     try {
-      const { url } = await paymentRequestsApi.getScreenshotUrl(id, accessToken);
+      const { url } = await paymentRequestsApi.getScreenshotUrl(id);
       window.open(url, '_blank', 'noopener,noreferrer');
     } catch (err) {
       toast.error(err instanceof ApiError ? err.message : 'فشل تحميل الصورة');
@@ -67,8 +67,8 @@ export default function PaymentsTab() {
     try {
       const updated =
         action === 'approve'
-          ? await paymentRequestsApi.approve(id, accessToken, notes)
-          : await paymentRequestsApi.reject(id, accessToken, notes);
+          ? await paymentRequestsApi.approve(id, notes)
+          : await paymentRequestsApi.reject(id, notes);
       setRequests((prev) => prev.map((r) => (r.id === id ? updated : r)));
       toast.success(action === 'approve' ? 'تمت الموافقة على الطلب' : 'تم رفض الطلب');
       setReview(null);

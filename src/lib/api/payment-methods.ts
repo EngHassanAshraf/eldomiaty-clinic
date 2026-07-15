@@ -5,10 +5,9 @@ export const paymentMethodsApi = {
   listActive: () =>
     apiFetch<PaymentMethodSettingRecord[]>('/payment-methods'),
 
-  update: (method: PaymentMethod, payload: PaymentMethodSettingUpdate, token?: string | null) =>
+  update: (method: PaymentMethod, payload: PaymentMethodSettingUpdate) =>
     apiFetch<PaymentMethodSettingRecord>(`/payment-methods/${method}`, {
       method: 'PATCH',
       body: JSON.stringify(payload),
-      token,
     }),
 };
