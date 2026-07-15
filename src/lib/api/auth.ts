@@ -1,3 +1,4 @@
+import { apiFetch } from './client';
 import { ApiError, User } from './types';
 
 export type AuthUserResponse = {
@@ -6,33 +7,29 @@ export type AuthUserResponse = {
   isPaid: boolean;
 };
 
-async function authFetch<T>(url: string, options: RequestInit = {}): Promise<T> {
-  const res = await fetch(url, {
-    credentials: 'include',
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers as Record<string, string>) },
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new ApiError(data.error || 'Request failed', res.status);
-  return data as T;
-}
-
 export const authApi = {
   login: (email: string, password: string) =>
-    authFetch<AuthUserResponse>('/api/auth/login', {
+    apiFetch<AuthUserResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+      skipAuth: true,
     }),
 
   register: (email: string, password: string) =>
-    authFetch<AuthUserResponse>('/api/auth/register', {
+    apiFetch<AuthUserResponse>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+      skipAuth: true,
     }),
 
-  refresh: () => authFetch<{ ok: true }>('/api/auth/refresh', { method: 'POST' }),
+  refresh: () =>
+    apiFetch<{ ok: true }>('/auth/refresh', { method: 'POST', skipAuth: true }),
 
-  me: () => authFetch<User>('/api/auth/me'),
+  me: () => apiFetch<User>('/auth/me'),
 
-  logout: () => authFetch<{ ok: true }>('/api/auth/logout', { method: 'POST' }),
+  logout: () =>
+    apiFetch<{ ok: true }>('/auth/logout', { method: 'POST', skipAuth: true }),
 };
+
+// Re-export ApiError so existing consumers that import it from here continue to work.
+export { ApiError };
