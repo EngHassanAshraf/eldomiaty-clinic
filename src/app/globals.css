@@ -130,6 +130,32 @@
 
   .btn-primary:active { transform: translateY(0); }
 
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+    color: white;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.75rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(232,41,74,0.30);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(232,41,74,0.38);
+  }
+
+  .btn-secondary:active { transform: translateY(0); }
+
   .btn-outline {
     display: inline-flex;
     align-items: center;
@@ -230,10 +256,26 @@
     to   { opacity: 1; transform: scale(1); }
   }
 
+  /* Navbar skeleton shimmer — used by Skeleton.tsx */
+  @keyframes shimmer {
+    from { background-position:  200% center; }
+    to   { background-position: -200% center; }
+  }
+
   /* ── Animation classes ── */
   .animate-fade-up    { animation: fadeUp 0.5s ease-out forwards; }
   .animate-pulse-ring { animation: pulseRing 2.5s ease-in-out infinite; }
   .animate-count      { animation: countIn 0.5s ease-out forwards; }
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      #f3f4f6 0%,
+      #e9ebee 50%,
+      #f3f4f6 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
 }
 
 /* ── Reduced motion override (must be last) ── */
