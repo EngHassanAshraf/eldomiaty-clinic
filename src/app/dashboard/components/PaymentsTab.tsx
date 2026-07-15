@@ -2,34 +2,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { paymentRequestsApi } from '@/lib/api/payment-requests';
-import { PaymentRequestRecord, PaymentMethod, PaymentStatus, ApiError } from '@/lib/api/types';
-import Skeleton from '@/components/ui/Skeleton';
+import { PaymentRequestRecord, PaymentStatus, ApiError } from '@/lib/api/types';
+import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, paymentStatusClass } from '@/lib/payment/labels';
+import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
 import { Check, Eye, X } from 'lucide-react';
-
-const METHOD_LABELS: Record<PaymentMethod, string> = {
-  BANK_TRANSFER: 'تحويل بنكي',
-  INSTAPAY: 'إنستاباي',
-  VODAFONE_CASH: 'فودافون كاش',
-  ORANGE_CASH: 'أورانج كاش',
-  ETISALAT_CASH: 'اتصالات كاش',
-};
-
-const STATUS_LABELS: Record<PaymentStatus, string> = {
-  PENDING: 'قيد المراجعة',
-  APPROVED: 'مقبول',
-  REJECTED: 'مرفوض',
-};
-
-function statusClass(status: PaymentStatus) {
-  if (status === 'APPROVED') {
-    return 'bg-emerald-50 text-emerald-700 border border-emerald-200/60';
-  }
-  if (status === 'REJECTED') {
-    return 'bg-red-50 text-red-700 border border-red-200/60';
-  }
-  return 'bg-amber-50 text-amber-700 border border-amber-200/60';
-}
 
 type ReviewAction = 'approve' | 'reject';
 
@@ -112,7 +89,7 @@ export default function PaymentsTab() {
   if (loading) {
     return (
       <div className="space-y-3">
-        {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12" />)}
+        <SkeletonList count={5} className="h-12" />
       </div>
     );
   }
@@ -144,10 +121,10 @@ export default function PaymentsTab() {
                 <td className="py-3 px-4 text-[#2d1a1a] text-xs" dir="ltr">
                   {r.userEmail ?? r.userId}
                 </td>
-                <td className="py-3 px-4 text-[#2d1a1a]">{METHOD_LABELS[r.method]}</td>
+                <td className="py-3 px-4 text-[#2d1a1a]">{PAYMENT_METHOD_LABELS[r.method]}</td>
                 <td className="py-3 px-4">
-                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusClass(r.status)}`}>
-                    {STATUS_LABELS[r.status]}
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${paymentStatusClass(r.status)}`}>
+                    {PAYMENT_STATUS_LABELS[r.status]}
                   </span>
                 </td>
                 <td className="py-3 px-4 text-[#8a6a6a] text-xs">

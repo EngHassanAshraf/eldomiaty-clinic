@@ -5,33 +5,11 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, CreditCard } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { paymentRequestsApi } from '@/lib/api/payment-requests';
-import { ApiError, PaymentMethod, PaymentRequestRecord, PaymentStatus } from '@/lib/api/types';
+import { ApiError, PaymentRequestRecord } from '@/lib/api/types';
+import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, paymentStatusClass } from '@/lib/payment/labels';
 import Skeleton from '@/components/ui/Skeleton';
+import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
-
-const METHOD_LABELS: Record<PaymentMethod, string> = {
-  BANK_TRANSFER: 'تحويل بنكي',
-  INSTAPAY: 'إنستاباي',
-  VODAFONE_CASH: 'فودافون كاش',
-  ORANGE_CASH: 'أورانج كاش',
-  ETISALAT_CASH: 'اتصالات كاش',
-};
-
-const STATUS_LABELS: Record<PaymentStatus, string> = {
-  PENDING: 'قيد المراجعة',
-  APPROVED: 'مقبول',
-  REJECTED: 'مرفوض',
-};
-
-function statusClass(status: PaymentStatus) {
-  if (status === 'APPROVED') {
-    return 'bg-emerald-50 text-emerald-700 border border-emerald-200/60';
-  }
-  if (status === 'REJECTED') {
-    return 'bg-red-50 text-red-700 border border-red-200/60';
-  }
-  return 'bg-amber-50 text-amber-700 border border-amber-200/60';
-}
 
 export default function MyPaymentRequestsPage() {
   const { accessToken, isLoading: authLoading, refreshAuth } = useAuth();
@@ -69,9 +47,7 @@ export default function MyPaymentRequestsPage() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-4">
           <Skeleton className="h-6 w-40" />
           <Skeleton className="h-10 w-64" />
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
+          <SkeletonList count={3} className="h-32" />
         </div>
       </div>
     );
@@ -131,12 +107,12 @@ export default function MyPaymentRequestsPage() {
                   <div className="flex-1 min-w-0 space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="font-bold text-sm text-[#2d1a1a]">
-                        {METHOD_LABELS[req.method]}
+                        {PAYMENT_METHOD_LABELS[req.method]}
                       </p>
                       <span
-                        className={`text-xs font-semibold px-2.5 py-1 rounded-full ${statusClass(req.status)}`}
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-full ${paymentStatusClass(req.status)}`}
                       >
-                        {STATUS_LABELS[req.status]}
+                        {PAYMENT_STATUS_LABELS[req.status]}
                       </span>
                     </div>
                     <p className="text-xs text-[#8a6a6a]">

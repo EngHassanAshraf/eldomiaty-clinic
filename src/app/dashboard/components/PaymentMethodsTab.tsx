@@ -4,21 +4,13 @@ import { useAuth } from '@/contexts/auth-context';
 import { paymentMethodsApi } from '@/lib/api/payment-methods';
 import {
   ApiError,
-  PaymentMethod,
   PaymentMethodSettingRecord,
   PaymentMethodSettingUpdate,
 } from '@/lib/api/types';
-import Skeleton from '@/components/ui/Skeleton';
+import { PAYMENT_METHOD_LABELS } from '@/lib/payment/labels';
+import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
 import { Pencil } from 'lucide-react';
-
-const METHOD_LABELS: Record<PaymentMethod, string> = {
-  BANK_TRANSFER: 'تحويل بنكي',
-  INSTAPAY: 'إنستاباي',
-  VODAFONE_CASH: 'فودافون كاش',
-  ORANGE_CASH: 'أورانج كاش',
-  ETISALAT_CASH: 'اتصالات كاش',
-};
 
 type EditForm = {
   displayName: string;
@@ -110,7 +102,7 @@ export default function PaymentMethodsTab() {
   if (loading) {
     return (
       <div className="space-y-3">
-        {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12" />)}
+        <SkeletonList count={5} className="h-12" />
       </div>
     );
   }
@@ -136,7 +128,7 @@ export default function PaymentMethodsTab() {
           <tbody>
             {methods.map((m) => (
               <tr key={m.method} className="border-b border-[#fad4db]/20 hover:bg-[#fff0f3]/30 transition-colors">
-                <td className="py-3 px-4 text-[#2d1a1a]">{METHOD_LABELS[m.method]}</td>
+                <td className="py-3 px-4 text-[#2d1a1a]">{PAYMENT_METHOD_LABELS[m.method]}</td>
                 <td className="py-3 px-4 text-[#2d1a1a]">{m.displayName}</td>
                 <td className="py-3 px-4 text-[#8a6a6a] text-xs" dir="ltr">
                   {m.accountNumber ?? '—'}
@@ -182,7 +174,7 @@ export default function PaymentMethodsTab() {
             aria-modal="true"
           >
             <h3 className="text-lg font-black text-[#2d1a1a]">
-              تعديل {METHOD_LABELS[editing.method]}
+              تعديل {PAYMENT_METHOD_LABELS[editing.method]}
             </h3>
             <div className="space-y-3">
               <div className="space-y-2">

@@ -1,4 +1,7 @@
 import { PaymentMethod, PaymentStatus } from '@prisma/client';
+import { parsePaymentMethod } from '@/lib/payment/parse';
+
+export { parsePaymentMethod };
 
 export const PAYMENT_REQUEST_SELECT = {
   id: true,
@@ -34,9 +37,3 @@ export function toPaymentRequestRecord(
   };
 }
 
-const PAYMENT_METHODS = new Set<string>(Object.values(PaymentMethod));
-
-export function parsePaymentMethod(value: unknown): PaymentMethod | null {
-  if (typeof value !== 'string' || !PAYMENT_METHODS.has(value)) return null;
-  return value as PaymentMethod;
-}
