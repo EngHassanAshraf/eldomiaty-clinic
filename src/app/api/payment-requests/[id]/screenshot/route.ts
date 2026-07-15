@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth/request';
 import { createPaymentProofSignedUrl } from '@/lib/storage/payment-proofs';
+import { handleRouteError } from '@/lib/api/handle-route-error';
 
 export async function GET(
   req: NextRequest,
@@ -16,9 +17,6 @@ export async function GET(
     const url = await createPaymentProofSignedUrl(request.screenshotUrl, 300);
     return NextResponse.json({ url });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unauthorized';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return handleRouteError(e, 'Not found', 404);
   }
 }

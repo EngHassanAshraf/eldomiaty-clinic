@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth/request';
+import { handleRouteError } from '@/lib/api/handle-route-error';
 
 export async function PATCH(
   req: NextRequest,
@@ -28,9 +29,6 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unauthorized';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: 'Update failed' }, { status: 400 });
+    return handleRouteError(e, 'Update failed', 400);
   }
 }

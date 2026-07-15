@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin, requireAuth } from '@/lib/auth/request';
 import { deletePaymentScreenshot, uploadPaymentScreenshot } from '@/lib/storage/payment-proofs';
 import { PAYMENT_REQUEST_SELECT, parsePaymentMethod, toPaymentRequestRecord } from './util';
+import { handleRouteError } from '@/lib/api/handle-route-error';
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,10 +18,7 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.json(requests.map(toPaymentRequestRecord));
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unauthorized';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: 'Failed to load requests' }, { status: 500 });
+    return handleRouteError(e, 'Failed to load requests');
   }
 }
 
@@ -115,7 +113,6 @@ export async function POST(req: NextRequest) {
     }
 
     const msg = e instanceof Error ? e.message : 'Submit failed';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    return NextResponse.json({ error: msg }, { status: 400 });
+    return handleRouteError(e, msg, 400);
   }
 }

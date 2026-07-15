@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin, requireAuth } from '@/lib/auth/request';
 import { deletePdf, uploadPdf, uploadPreviewPdf } from '@/lib/storage/files';
 import { FILE_SELECT, toFileRecord } from './util';
+import { handleRouteError } from '@/lib/api/handle-route-error';
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,9 +15,7 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.json(files.map(toFileRecord));
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unauthorized';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    return NextResponse.json({ error: 'Failed to load files' }, { status: 500 });
+    return handleRouteError(e, 'Failed to load files');
   }
 }
 
@@ -71,8 +70,6 @@ export async function POST(req: NextRequest) {
     if (recordId) await prisma.file.delete({ where: { id: recordId } }).catch(() => {});
 
     const msg = e instanceof Error ? e.message : 'Upload failed';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: msg }, { status: 400 });
+    return handleRouteError(e, msg, 400);
   }
 }

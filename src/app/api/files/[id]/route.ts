@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma/client';
 import { requireAdmin, requireAuth } from '@/lib/auth/request';
 import { deletePdf } from '@/lib/storage/files';
 import { FILE_SELECT, toFileRecord } from '../util';
+import { handleRouteError } from '@/lib/api/handle-route-error';
 
 export async function GET(
   req: NextRequest,
@@ -18,9 +19,7 @@ export async function GET(
     if (!file) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(toFileRecord(file));
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Unauthorized';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return handleRouteError(e, 'Not found', 404);
   }
 }
 
@@ -55,10 +54,7 @@ export async function PATCH(
     });
     return NextResponse.json(toFileRecord(updated));
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Update failed';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: msg }, { status: 400 });
+    return handleRouteError(e, 'Update failed', 400);
   }
 }
 
@@ -78,9 +74,6 @@ export async function DELETE(
     await prisma.file.delete({ where: { id } });
     return new NextResponse(null, { status: 204 });
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Delete failed';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return handleRouteError(e, 'Not found', 404);
   }
 }

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma/client';
 import { requireAdmin } from '@/lib/auth/request';
 import { PAYMENT_REQUEST_SELECT, toPaymentRequestRecord } from '../../util';
+import { handleRouteError } from '@/lib/api/handle-route-error';
 
 export async function POST(
   req: NextRequest,
@@ -61,9 +62,6 @@ export async function POST(
 
     return NextResponse.json(toPaymentRequestRecord(updated));
   } catch (e) {
-    const msg = e instanceof Error ? e.message : 'Approve failed';
-    if (msg === 'Unauthorized') return NextResponse.json({ error: msg }, { status: 401 });
-    if (msg === 'Forbidden') return NextResponse.json({ error: msg }, { status: 403 });
-    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    return handleRouteError(e, 'Not found', 404);
   }
 }
