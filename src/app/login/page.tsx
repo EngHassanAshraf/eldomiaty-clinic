@@ -31,7 +31,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-hero-premium flex items-center justify-center px-4">
+    <div className="min-h-screen bg-hero-premium flex items-center justify-center px-4 py-25 md:pb-0">
       <div className="w-full max-w-md">
         <div className="card-base glass p-8 space-y-6">
           <div className="text-center">
@@ -76,7 +76,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-rose w-full py-3 text-base disabled:opacity-60 disabled:cursor-not-allowed"
+              className="btn-secondary w-full py-3 text-base disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? 'جارى الدخول...' : 'تسجيل الدخول'}
             </button>
@@ -88,6 +88,7 @@ function LoginForm() {
               إنشاء حساب
             </Link>
           </p>
+
         </div>
       </div>
     </div>

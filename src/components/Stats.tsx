@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocale } from "@/lib/LocaleContext";
 import { STATS_I18N } from "@/lib/i18n";
-export { computeSequence } from "@/lib/computeSequence";
 
 function CountUp({ target, suffix }: { target: number; suffix: string }) {
   const [count, setCount] = useState(0);

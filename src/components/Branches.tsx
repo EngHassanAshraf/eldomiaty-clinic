@@ -76,7 +76,7 @@ export default function Branches() {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white border-2 border-white/60 hover:bg-white/15 transition-all duration-200 backdrop-blur-sm">
                 <Phone size={16} />{CLINIC.phone}
               </a>
-              <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-primary gap-2">
+              <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary gap-2">
                 <MessageCircle size={16} />{t.whatsapp}
               </a>
             </div>

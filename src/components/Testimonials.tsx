@@ -81,7 +81,7 @@ export default function Testimonials() {
         </div>
 
         <div className="text-center">
-          <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-primary gap-2 px-8 py-4 text-base">
+          <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary gap-2 px-8 py-4 text-base">
             <MessageCircle size={20} />{t.ctaFull}
           </a>
         </div>

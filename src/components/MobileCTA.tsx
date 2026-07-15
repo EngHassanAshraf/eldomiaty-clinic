@@ -21,7 +21,7 @@ export default function MobileCTA() {
         <span className="text-[10px] font-semibold">{t.whatsapp}</span>
       </a>
       <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" aria-label={t.cta}
-        className="flex-[1.4] btn-primary gap-1.5 text-xs py-3 mx-1 active:scale-95 min-h-[44px]">
+        className="flex-[1.4] btn-secondary gap-1.5 text-xs py-3 mx-1 active:scale-95 min-h-[44px]">
         <Calendar size={15} />{t.cta}
       </a>
     </div>

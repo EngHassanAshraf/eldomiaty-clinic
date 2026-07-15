@@ -72,7 +72,7 @@ export default function Services() {
         </div>
 
         <div className="text-center mt-10">
-          <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-primary px-8 py-4 text-base gap-2">
+          <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary px-8 py-4 text-base gap-2">
             <MessageCircle size={20} />{t.ctaFull}
           </a>
         </div>

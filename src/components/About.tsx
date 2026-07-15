@@ -55,7 +55,7 @@ export default function About() {
               ))}
             </div>
 
-            <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-primary gap-2 w-full justify-center">
+            <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary gap-2 w-full justify-center">
               <MessageCircle size={18} />{t.cta}
             </a>
           </div>

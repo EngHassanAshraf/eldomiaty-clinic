@@ -62,7 +62,7 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-primary gap-2 text-base">
+              <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary gap-2 text-base">
                 <MessageCircle size={18} />{t.ctaFull}
               </a>
               <a href={`tel:${CLINIC.phone}`} className="btn-outline gap-2 text-base">

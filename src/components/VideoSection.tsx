@@ -43,7 +43,7 @@ export default function VideoSection() {
                 </div>
               </div>
               <button onClick={() => setPlaying(true)}
-                className="relative z-10 btn-primary w-16 h-16 rounded-full flex items-center justify-center shadow-primary"
+                className="relative z-10 btn-secondary w-16 h-16 rounded-full flex items-center justify-center shadow-primary"
                 aria-label={t.playVideo}>
                 <Play size={24} fill="white" />
               </button>
