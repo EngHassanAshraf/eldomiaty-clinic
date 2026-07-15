@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { usersApi } from '@/lib/api/users';
 import { PaginatedUsers, User, ApiError } from '@/lib/api/types';
-import Skeleton from '@/components/ui/Skeleton';
+import SkeletonList from '@/components/ui/SkeletonList';
 import PaymentBadge from '@/components/ui/PaymentBadge';
 import toast from 'react-hot-toast';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
@@ -65,7 +65,7 @@ export default function UsersTab() {
   if (loading) {
     return (
       <div className="space-y-3">
-        {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12" />)}
+        <SkeletonList count={5} className="h-12" />
       </div>
     );
   }

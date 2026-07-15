@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context';
 import { filesApi } from '@/lib/api/files';
 import { FileRecord, ApiError } from '@/lib/api/types';
-import Skeleton from '@/components/ui/Skeleton';
+import SkeletonList from '@/components/ui/SkeletonList';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import toast from 'react-hot-toast';
 import { Lock, FileText } from 'lucide-react';
@@ -48,9 +48,7 @@ export default function FilesPage() {
         <ErrorBoundary>
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-40" />
-              ))}
+              <SkeletonList count={6} className="h-40" />
             </div>
           ) : error ? (
             <div className="text-center py-12 text-[#8a6a6a]">{error}</div>

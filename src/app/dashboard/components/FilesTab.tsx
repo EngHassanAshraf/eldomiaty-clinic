@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { filesApi } from '@/lib/api/files';
 import { FileRecord, ApiError } from '@/lib/api/types';
-import Skeleton from '@/components/ui/Skeleton';
+import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
 import { Trash2, Pencil, Upload, X, Check } from 'lucide-react';
 
@@ -120,20 +120,20 @@ export default function FilesTab() {
         <div className="grid sm:grid-cols-2 gap-3">
           <input
             type="text" value={title} onChange={(e) => setTitle(e.target.value)} required
-            placeholder="عنوان الملف" disabled={uploading}
+            placeholder="عنوان الملف" aria-label="عنوان الملف" disabled={uploading}
             className="px-3 py-2.5 rounded-xl border border-[#fad4db]/60 bg-white text-sm text-[#2d1a1a] focus:outline-none focus:border-[#e8294a]/50 disabled:opacity-60"
           />
           <input
             type="text" value={description} onChange={(e) => setDescription(e.target.value)}
-            placeholder="وصف الملف (اختياري)" disabled={uploading}
+            placeholder="وصف الملف (اختياري)" aria-label="وصف الملف" disabled={uploading}
             className="px-3 py-2.5 rounded-xl border border-[#fad4db]/60 bg-white text-sm text-[#2d1a1a] focus:outline-none focus:border-[#e8294a]/50 disabled:opacity-60"
           />
         </div>
         <div className="flex items-center gap-3 flex-wrap">
-          <input ref={fileInputRef} type="file" accept="application/pdf" disabled={uploading}
+          <input ref={fileInputRef} type="file" accept="application/pdf" aria-label="اختر ملف" disabled={uploading}
             className="text-sm text-[#6b4c4c] file:btn-rose file:text-xs file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:cursor-pointer" />
           {isPaidContent && (
-            <input ref={previewInputRef} type="file" accept="application/pdf" disabled={uploading}
+            <input ref={previewInputRef} type="file" accept="application/pdf" aria-label="اختر ملف المعاينة" disabled={uploading}
               className="text-sm text-[#6b4c4c] file:btn-rose file:text-xs file:px-3 file:py-1.5 file:rounded-lg file:border-0 file:cursor-pointer" />
           )}
           <label className="flex items-center gap-2 text-sm text-[#6b4c4c] cursor-pointer">
@@ -150,7 +150,7 @@ export default function FilesTab() {
 
       {/* Files list */}
       {loading ? (
-        <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)}</div>
+        <div className="space-y-3"><SkeletonList count={3} className="h-14" /></div>
       ) : files.length === 0 ? (
         <div className="text-center py-8 text-[#8a6a6a]">لا توجد ملفات</div>
       ) : (
@@ -161,9 +161,9 @@ export default function FilesTab() {
                 <>
                   <div className="flex-1 grid sm:grid-cols-2 gap-2">
                     <input value={editTitle} onChange={(e) => setEditTitle(e.target.value)}
-                      className="px-3 py-1.5 rounded-lg border border-[#fad4db]/60 text-sm text-[#2d1a1a] focus:outline-none" />
+                      aria-label="تحديث العنوان" className="px-3 py-1.5 rounded-lg border border-[#fad4db]/60 text-sm text-[#2d1a1a] focus:outline-none" />
                     <input value={editDescription} onChange={(e) => setEditDescription(e.target.value)}
-                      placeholder="الوصف" className="px-3 py-1.5 rounded-lg border border-[#fad4db]/60 text-sm text-[#2d1a1a] focus:outline-none" />
+                      aria-label="تحديث الوصف" placeholder="الوصف" className="px-3 py-1.5 rounded-lg border border-[#fad4db]/60 text-sm text-[#2d1a1a] focus:outline-none" />
                   </div>
                   <label className="flex items-center gap-1.5 text-xs text-[#6b4c4c] cursor-pointer shrink-0">
                     <input type="checkbox" checked={editIsPaid} onChange={(e) => setEditIsPaid(e.target.checked)} className="accent-[#e8294a]" />
