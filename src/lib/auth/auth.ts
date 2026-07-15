@@ -8,8 +8,12 @@ export type AuthTokens = { accessToken: string; refreshToken: string };
 
 type SessionMeta = { deviceInfo?: string; ipAddress?: string };
 
+// ---------------------------------------------------------------------------
+// Private helpers
+// ---------------------------------------------------------------------------
+
 async function issueTokens(
-  user: { id: string; role: Role; isPaid: boolean },
+  user: { id: string; email: string; role: Role; isPaid: boolean },
   meta?: SessionMeta
 ): Promise<AuthTokens> {
   const refreshToken = generateRefreshToken();
@@ -25,6 +29,59 @@ async function issueTokens(
   const accessToken = await signAccessToken(user);
   return { accessToken, refreshToken };
 }
+
+type RotateResult = {
+  accessToken: string;
+  refreshToken: string;
+  user: { id: string; email: string; role: Role; isPaid: boolean };
+};
+
+/**
+ * Core of token rotation: validates the incoming refresh token, deletes the
+ * old session, issues a new one, and signs a fresh access token.
+ * Returns new tokens together with the full user record so callers that need
+ * the user (refreshAndGetUser) don't require a second DB query.
+ */
+async function rotateSession(
+  refreshToken: string,
+  meta?: SessionMeta
+): Promise<RotateResult> {
+  const session = await prisma.userSession.findUnique({
+    where: { refreshTokenHash: hashRefreshToken(refreshToken) },
+    include: { user: true },
+  });
+
+  if (!session || session.expiresAt < new Date()) {
+    if (session) await prisma.userSession.delete({ where: { id: session.id } });
+    throw new Error('Invalid refresh token');
+  }
+
+  const { user } = session;
+  await prisma.userSession.delete({ where: { id: session.id } });
+
+  const newRefreshToken = generateRefreshToken();
+  await prisma.userSession.create({
+    data: {
+      userId: user.id,
+      refreshTokenHash: hashRefreshToken(newRefreshToken),
+      expiresAt: refreshExpiresAt(),
+      deviceInfo: meta?.deviceInfo ?? session.deviceInfo,
+      ipAddress: meta?.ipAddress ?? session.ipAddress,
+      lastActivityAt: new Date(),
+    },
+  });
+
+  const accessToken = await signAccessToken(user);
+  return {
+    accessToken,
+    refreshToken: newRefreshToken,
+    user: { id: user.id, email: user.email, role: user.role, isPaid: user.isPaid },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
 
 export async function register(
   email: string,
@@ -56,32 +113,24 @@ export async function refresh(
   refreshToken: string,
   meta?: SessionMeta
 ): Promise<AuthTokens> {
-  const session = await prisma.userSession.findUnique({
-    where: { refreshTokenHash: hashRefreshToken(refreshToken) },
-    include: { user: true },
-  });
-  if (!session || session.expiresAt < new Date()) {
-    if (session) await prisma.userSession.delete({ where: { id: session.id } });
-    throw new Error('Invalid refresh token');
-  }
-
-  const { user } = session;
-  await prisma.userSession.delete({ where: { id: session.id } });
-
-  const newRefreshToken = generateRefreshToken();
-  await prisma.userSession.create({
-    data: {
-      userId: user.id,
-      refreshTokenHash: hashRefreshToken(newRefreshToken),
-      expiresAt: refreshExpiresAt(),
-      deviceInfo: meta?.deviceInfo ?? session.deviceInfo,
-      ipAddress: meta?.ipAddress ?? session.ipAddress,
-      lastActivityAt: new Date(),
-    },
-  });
-
-  const accessToken = await signAccessToken(user);
+  const { accessToken, refreshToken: newRefreshToken } = await rotateSession(refreshToken, meta);
   return { accessToken, refreshToken: newRefreshToken };
+}
+
+export type RefreshWithUserResult = AuthTokens & {
+  user: { id: string; email: string; role: Role; isPaid: boolean };
+};
+
+/**
+ * Rotates the refresh token and returns the new tokens together with the user
+ * record — all in a single DB roundtrip sequence. This avoids a second HTTP
+ * call to /api/auth/me that would otherwise be needed on the client.
+ */
+export async function refreshAndGetUser(
+  refreshToken: string,
+  meta?: SessionMeta
+): Promise<RefreshWithUserResult> {
+  return rotateSession(refreshToken, meta);
 }
 
 export async function logout(refreshToken: string): Promise<void> {
