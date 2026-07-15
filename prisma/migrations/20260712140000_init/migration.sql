@@ -1,3 +1,6 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
 
@@ -10,6 +13,7 @@ CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "name" VARCHAR(150),
     "email" VARCHAR(320) NOT NULL,
     "password_hash" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
@@ -40,6 +44,7 @@ CREATE TABLE "files" (
     "title" VARCHAR(255) NOT NULL,
     "description" TEXT,
     "storage_path" VARCHAR(1024) NOT NULL,
+    "preview_storage_path" VARCHAR(1024),
     "is_paid_content" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -165,7 +170,7 @@ CREATE INDEX "payment_requests_method_idx" ON "payment_requests"("method");
 CREATE INDEX "payment_requests_reviewed_by_admin_id_idx" ON "payment_requests"("reviewed_by_admin_id");
 
 -- CreateIndex
-CREATE INDEX "payment_method_settings_method_is_active_idx" ON "payment_method_settings"("method", "is_active");
+CREATE UNIQUE INDEX "payment_method_settings_method_key" ON "payment_method_settings"("method");
 
 -- CreateIndex
 CREATE INDEX "payment_method_settings_is_active_idx" ON "payment_method_settings"("is_active");
@@ -220,3 +225,4 @@ ALTER TABLE "medical_file_access_logs" ADD CONSTRAINT "medical_file_access_logs_
 
 -- AddForeignKey
 ALTER TABLE "audit_logs" ADD CONSTRAINT "audit_logs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
