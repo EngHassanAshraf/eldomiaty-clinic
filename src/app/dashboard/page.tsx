@@ -1,8 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { useAuth } from '@/contexts/auth-context';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRequireAuth } from '@/hooks/useRequireAuth';
 import UsersTab from './components/UsersTab';
 import PaymentsTab from './components/PaymentsTab';
 import PaymentMethodsTab from './components/PaymentMethodsTab';
@@ -19,15 +17,8 @@ const TABS = [
 ];
 
 export default function DashboardPage() {
-  const { user, isLoading } = useAuth();
-  const router = useRouter();
+  const { isLoading, user } = useRequireAuth({ requiredRole: 'ADMIN', redirectTo: '/', replace: false });
   const [activeTab, setActiveTab] = useState<Tab>('users');
-
-  useEffect(() => {
-    if (!isLoading && (!user || user.role !== 'ADMIN')) {
-      router.push('/');
-    }
-  }, [user, isLoading, router]);
 
   if (isLoading || !user) {
     return (
