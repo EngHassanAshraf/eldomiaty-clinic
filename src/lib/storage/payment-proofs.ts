@@ -30,7 +30,7 @@ function extensionFor(mimeType: string, originalName: string): string {
   return '.jpg';
 }
 
-export function paymentProofPath(
+function paymentProofPath(
   userId: string,
   requestId: string,
   mimeType: string,
