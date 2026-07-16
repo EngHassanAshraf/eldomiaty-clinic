@@ -62,11 +62,11 @@ export default function About() {
 
           <div className="rounded-2xl overflow-hidden shadow-subtle border border-gray-100">
             <iframe
-              src={CLINIC.mapEmbed}
+              src={locale ==="en"? CLINIC.mapEnEmbed: CLINIC.mapArEmbed}
               width="100%" height="450"
               style={{ border: 0 }} allowFullScreen loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title={t.mapTitle}
+              title="الخريطة"
             />
           </div>
         </div>
