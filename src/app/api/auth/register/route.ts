@@ -10,13 +10,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'التسجيل غير متاح حالياً' }, { status: 403 });
     }
 
-    const { email, password } = await req.json();
+    const { name, email, password, confirmPassword} = await req.json();
     if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
-    const tokens = await register(email, password);
+    const tokens = await register(name, email, password, confirmPassword);
     const res = NextResponse.json({
       userId: tokens.user.id,
+      name:tokens.user.name,
       role: tokens.user.role,
       isPaid: tokens.user.isPaid,
     });

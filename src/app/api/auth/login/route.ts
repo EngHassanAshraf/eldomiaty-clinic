@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     const tokens = await login(email, password);
     const res = NextResponse.json({
       userId: tokens.user.id,
+      name:tokens.user.name,
       role: tokens.user.role,
       isPaid: tokens.user.isPaid,
     });

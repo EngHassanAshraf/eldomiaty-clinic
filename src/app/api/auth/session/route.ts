@@ -25,8 +25,7 @@ export async function GET(req: NextRequest) {
 
     const res = NextResponse.json({
       id: user.id,
-      // name falls back to email -- mirrors the shape returned by /api/auth/me
-      name: user.email,
+      name: user.name,
       email: user.email,
       role: user.role,
       isPaid: user.isPaid,
