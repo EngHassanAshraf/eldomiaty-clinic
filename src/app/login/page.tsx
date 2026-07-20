@@ -6,6 +6,8 @@ import { useAuth } from '@/contexts/auth-context';
 import toast from 'react-hot-toast';
 import { ApiError } from '@/lib/api/types';
 import Link from 'next/link';
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from '@/lib/i18n';
 
 function LoginForm() {
   const { login } = useAuth();
@@ -14,6 +16,9 @@ function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  const { locale } = useLocale();
+  const t = UI[locale];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,14 +40,14 @@ function LoginForm() {
       <div className="w-full max-w-md">
         <div className="card-base glass p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-black text-[#2d1a1a]">تسجيل الدخول</h1>
-            <p className="text-sm text-[#8a6a6a] mt-1">أدخل بياناتك للوصول إلى حسابك</p>
+            <h1 className="text-2xl font-black text-[#2d1a1a]">{t.loginTitle}</h1>
+            <p className="text-sm text-[#8a6a6a] mt-1">{t.loginMsg}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-[#6b4c4c] mb-1.5">
-                البريد الإلكتروني
+                {t.email}
               </label>
               <input
                 type="email"
@@ -58,7 +63,7 @@ function LoginForm() {
 
             <div>
               <label className="block text-sm font-semibold text-[#6b4c4c] mb-1.5">
-                كلمة المرور
+                {t.password}
               </label>
               <input
                 type="password"
@@ -78,14 +83,14 @@ function LoginForm() {
               disabled={loading}
               className="btn-secondary w-full py-3 text-base disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? 'جارى الدخول...' : 'تسجيل الدخول'}
+              {loading ? t.loginLoading : t.loginButton}
             </button>
           </form>
 
           <p className="text-center text-sm text-[#8a6a6a]">
-            ليس لديك حساب؟{' '}
+              {t.dontHaveAcc}{'  '}
             <Link href="/register" className="text-[#e8294a] font-semibold hover:underline">
-              إنشاء حساب
+              {t.registerButton}
             </Link>
           </p>
 
