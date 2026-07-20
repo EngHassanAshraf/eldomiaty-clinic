@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import { CLINIC } from "@/lib/data";
@@ -19,6 +19,10 @@ export default function Services() {
   const filtered = activeCat === t.catAll
     ? SERVICES_I18N
     : SERVICES_I18N.filter((s) => s[locale].category === activeCat);
+
+  useEffect(() => {
+    setActive(allCats[0]);
+  }, [locale]);
 
   return (
     <section id="services" className="section-padding bg-section-a">
@@ -43,6 +47,7 @@ export default function Services() {
             aria-hidden="true"
             loading="lazy"
           />
+
           {/* Overlay */}
           <div className="absolute inset-0 bg-black/55" aria-hidden="true" />
 
@@ -58,7 +63,8 @@ export default function Services() {
               </button>
             ))}
           </div>
-        </div>        
+        </div>
+
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map((s) => (
             <div key={s.id} className="card-base p-5 text-center cursor-default min-h-[120px] flex flex-col items-center justify-center gap-2">
