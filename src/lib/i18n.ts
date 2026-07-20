@@ -10,14 +10,14 @@ export const STATS_I18N = [
 ];
 
 export const BRANCHES_I18N = [
-  { id: 1, icon: "🏥", ar: { name: "التجمع الخامس",  address: "كايرو ميديكال سنتر خلف المستشفى الجوى - شارع التسعين الشمالى" }, en: { name: "Fifth Settlement", address: "Cairo Medical Center, behind Air Force Hospital, North 90th St." } },
+  { id: 1, icon: "🏥", ar: { name: "التجمع الخامس",  address: "كايرو ميديكال سنتر خلف المستشفى الجوى - شارع التسعين الشمالى" }, en: { name: "New Cairo (Fifth Settlement)", address: "Cairo Medical Center, behind Air Force Hospital, North 90th St." } },
   { id: 2, icon: "🏥", ar: { name: "المهندسين",       address: "43 شارع سوريا بجوار لابور" },                          en: { name: "Mohandessin",       address: "43 Syria St., next to Labor Hospital" } },
   { id: 3, icon: "🏥", ar: { name: "مدينة نصر",       address: "40 شارع عباس العقاد أمام كوستا كافية" },                en: { name: "Nasr City",         address: "40 Abbas El-Akkad St., opposite Costa Café" } },
   { id: 4, icon: "🏥", ar: { name: "مدينتى",          address: "ميديكال سنتر 1 مدينتى" },                                         en: { name: "Madinaty",          address: "Medical Center 1, Madinaty" } },
 ];
 
 export const SERVICES_I18N = [
-  { id: 1,  icon: "🔬", ar: { title: "الحقن المجهرى",                       category: "إنجاب"   }, en: { title: "IVF / ICSI",                          category: "Fertility" } },
+  { id: 1,  icon: "🔬", ar: { title: "الحقن المجهري",                       category: "خصوبة"   }, en: { title: "IVF / ICSI",                          category: "Fertility" } },
   { id: 2,  icon: "💊", ar: { title: "ولادة بدون ألم",                      category: "ولادة"   }, en: { title: "Painless Delivery",                   category: "Delivery"  } },
   { id: 3,  icon: "🤰", ar: { title: "متابعة الحمل",                        category: "حمل"     }, en: { title: "Pregnancy Follow-up",                 category: "Pregnancy" } },
   { id: 4,  icon: "⚕️", ar: { title: "جراحات نسائية",                       category: "جراحة"   }, en: { title: "Gynecological Surgery",               category: "Surgery"   } },
@@ -33,11 +33,11 @@ export const SERVICES_I18N = [
   { id: 14, icon: "👶", ar: { title: "فحص تشوهات الجنين",                   category: "حمل"     }, en: { title: "Fetal Anomaly Scan",                  category: "Pregnancy" } },
   { id: 15, icon: "🩺", ar: { title: "علاج عدوى الجهاز التناسلى",           category: "علاج"    }, en: { title: "Reproductive Tract Infections",       category: "Treatment" } },
   { id: 16, icon: "💊", ar: { title: "علاج آلام الحوض المزمنة",             category: "علاج"    }, en: { title: "Chronic Pelvic Pain",                 category: "Treatment" } },
-  { id: 17, icon: "📡", ar: { title: "سونار دقيق",                          category: "تشخيص"  }, en: { title: "Precision Ultrasound",                category: "Diagnosis" } },
-  { id: 18, icon: "⚠️", ar: { title: "متابعة الحمل الخطر",                  category: "حمل"     }, en: { title: "High-Risk Pregnancy",                 category: "Pregnancy" } },
-  { id: 19, icon: "🔬", ar: { title: "أطفال الأنابيب",                      category: "إنجاب"   }, en: { title: "IVF",                                 category: "Fertility" } },
-  { id: 20, icon: "🧬", ar: { title: "تلقيح صناعى",                         category: "إنجاب"   }, en: { title: "Artificial Insemination",             category: "Fertility" } },
-  { id: 21, icon: "🔍", ar: { title: "تأخر الحمل - تشخيص وعلاج",           category: "إنجاب"   }, en: { title: "Infertility Diagnosis & Treatment",   category: "Fertility" } },
+  { id: 17, icon: "📡", ar: { title: "سونار دقيق",                          category: "تشخيص"  }, en: { title: "Detailed Ultrasound",                category: "Diagnosis" } },
+  { id: 18, icon: "⚠️", ar: { title: "متابعة الحمل الخطر",                  category: "حمل"     }, en: { title: "High-Risk Pregnancy Care",                 category: "Pregnancy" } },
+  { id: 19, icon: "🔬", ar: { title: "أطفال الأنابيب",                      category: "خصوبة"   }, en: { title: "IVF",                                 category: "Fertility" } },
+  { id: 20, icon: "🧬", ar: { title: "تلقيح صناعى",                         category: "خصوبة"   }, en: { title: "IUI (Artificial Insemination)",             category: "Fertility" } },
+  { id: 21, icon: "🔍", ar: { title: "تأخر الحمل - تشخيص وعلاج",           category: "خصوبة"   }, en: { title: "Infertility Diagnosis & Treatment",   category: "Fertility" } },
   { id: 22, icon: "🔭", ar: { title: "منظار البطن التشخيصى والعلاجى",       category: "جراحة"   }, en: { title: "Diagnostic & Therapeutic Laparoscopy",category: "Surgery"   } },
   { id: 23, icon: "🔭", ar: { title: "منظار الرحم التشخيصى والعلاجى",       category: "جراحة"   }, en: { title: "Diagnostic & Therapeutic Hysteroscopy",category: "Surgery"  } },
   { id: 24, icon: "💍", ar: { title: "فحوصات ما قبل الزواج",                category: "وقاية"   }, en: { title: "Pre-Marital Tests",                   category: "Prevention"} },
@@ -49,29 +49,29 @@ export const SERVICES_I18N = [
   { id: 30, icon: "⚕️", ar: { title: "استئصال الرحم والمبيض بالمنظار",      category: "جراحة"   }, en: { title: "Laparoscopic Hysterectomy",           category: "Surgery"   } },
   { id: 31, icon: "✨", ar: { title: "عمليات تجميل المهبل",                  category: "تجميل"  }, en: { title: "Vaginal Rejuvenation",                category: "Cosmetic"  } },
   { id: 32, icon: "✨", ar: { title: "فيلر شفرات المهبل",                    category: "تجميل"  }, en: { title: "Labia Filler",                        category: "Cosmetic"  } },
-  { id: 33, icon: "✨", ar: { title: "ليزر لتضييق المهبل",                   category: "تجميل"  }, en: { title: "Vaginal Tightening Laser",            category: "Cosmetic"  } },
+  { id: 33, icon: "✨", ar: { title: "ليزر لتضييق المهبل",                   category: "تجميل"  }, en: { title: "Laser Vaginal Tightening",            category: "Cosmetic"  } },
   { id: 34, icon: "✨", ar: { title: "بوتوكس لعلاج التشنج المهبلى",         category: "تجميل"  }, en: { title: "Botox for Vaginismus",                category: "Cosmetic"  } },
   { id: 35, icon: "🤱", ar: { title: "رعاية ما قبل وبعد الولادة",           category: "ولادة"   }, en: { title: "Pre & Postnatal Care",                category: "Delivery"  } },
 ];
 
 export const TESTIMONIALS_I18N = [
-  { id: 1,  ar: { text: "ولادة ممتعة للغاية بدون أى ألم، بجد مش مصدقة لغاية دلوقتى",                                                                    author: "هند كمال"   }, en: { text: "An amazing painless delivery — I still can't believe it!",                                                                    author: "Hind Kamal"   } },
-  { id: 2,  ar: { text: "أفضل دكتور حقن مجهرى على الإطلاق، الحمد لله عمليتى نجحت وحامل بتوأم",                                                           author: "أسماء يوسف" }, en: { text: "The best IVF doctor ever. My procedure succeeded and I'm pregnant with twins, alhamdulillah.",                                   author: "Asmaa Youssef"} },
-  { id: 3,  ar: { text: "دكتور متميز بالمعاملة الحسنة وخبرته فى العمل وسهولة التشخيص والعلاج",                                                            author: "سارة ماهر"  }, en: { text: "An outstanding doctor — kind, experienced, and makes diagnosis and treatment feel effortless.",                                  author: "Sara Maher"   } },
+  { id: 1,  ar: { text: "ولادة ممتعة للغاية بدون أي ألم، بجد مش مصدقة لغاية دلوقتى",                                                                    author: "هند كمال"   }, en: { text: "An amazing painless fertility — I still can't believe it!",                                                                    author: "Hind Kamal"   } },
+  { id: 2,  ar: { text: "أفضل دكتور حقن مجهرى على الإطلاق، الحمد لله عمليتى نجحت وحامل بتوأم",                                                           author: "أسماء يوسف" }, en: { text: "The best IVF specialist I've ever met.. My procedure succeeded and I'm pregnant with twins, alhamdulillah.",                                   author: "Asmaa Youssef"} },
+  { id: 3,  ar: { text: "دكتور متميز بالمعاملة الحسنة وخبرته فى العمل وسهولة التشخيص والعلاج",                                                            author: "سارة ماهر"  }, en: { text: "An outstanding doctor — kind, experienced, and provides accurate diagnosis and effective treatment.",                                  author: "Sara Maher"   } },
   { id: 4,  ar: { text: "أنت أحسن دكتور فى العالم بجد، غيرت نظرتى لمصر وأطباء مصر",                                                                      author: "علياء أحمد" }, en: { text: "You are truly the best doctor in the world. You changed my view of Egyptian medicine.",                                          author: "Alia Ahmed"   } },
   { id: 5,  ar: { text: "كنت بأعانى من الإجهاض المتكرر وبمتابعة حضرتك الدقيقة وصلت للشهر التاسع، والله مش مصدقة",                                        author: "نهلة ربيع"  }, en: { text: "I suffered from recurrent miscarriages. With his careful follow-up I reached 9 months — I still can't believe it.",              author: "Nahla Rabie"  } },
-  { id: 6,  ar: { text: "ولادة طبيعية بدون ألم وبدون أى جرح وأنا بكرية، مش مصدقة إنه مفيش جرح مهبلى",                                                    author: "بسملة على"  }, en: { text: "A natural delivery with no pain and no tear as a first-time mother — I can't believe there was no episiotomy.",                  author: "Basmala Ali"  } },
+  { id: 6,  ar: { text: "ولادة طبيعية بدون ألم وبدون أي جرح وأنا بكرية، مش مصدقة إنه مفيش جرح مهبلى",                                                    author: "بسملة على"  }, en: { text: "A natural fertility with no pain and no tear as a first-time mother — I can't believe there was no episiotomy.",                  author: "Basmala Ali"  } },
   { id: 7,  ar: { text: "كنت مرعوبة وخايفة وحضرتك طمنتنى، مرسى جدا لك على تعاملك الراقى وذوقك",                                                          author: "سوزان ماهر" }, en: { text: "I was terrified, but he reassured me completely. Thank you so much for your kindness and professionalism.",                       author: "Susan Maher"  } },
   { id: 8,  ar: { text: "شكرا شكرا شكرا، بجد حققت حلمى، ربنا يرزقك ويسعدك",                                                                              author: "علا رجب"    }, en: { text: "Thank you, thank you, thank you — you truly made my dream come true. May God bless you.",                                        author: "Ola Ragab"    } },
-  { id: 9,  ar: { text: "أنصح وأرشح د. محمد الدمياطى لأى سيدة عاوزة حمل أو متابعة حمل أو ولادة",                                                         author: "سها ماهر"   }, en: { text: "I highly recommend Dr. Eldomiaty to any woman seeking fertility treatment, pregnancy follow-up, or delivery.",                   author: "Soha Maher"   } },
-  { id: 10, ar: { text: "بنستفيد من خبرته فى إنجلترا، سويت حقن مجهرى ونجح، بجد فى مصر عندنا مستويات عالية من العلم",                                     author: "ملك المهدى" }, en: { text: "We benefit from his UK expertise. My IVF succeeded — Egypt truly has world-class medical standards.",                             author: "Malak Elmahdy"} },
+  { id: 9,  ar: { text: "أنصح وأرشح د. محمد الدمياطى لأي سيدة عاوزة حمل أو متابعة حمل أو ولادة",                                                         author: "سها ماهر"   }, en: { text: "I highly recommend Dr. Eldomiaty to any woman seeking fertility treatment, pregnancy follow-up, or delivery.",                   author: "Soha Maher"   } },
+  { id: 10, ar: { text: "بنستفيد من خبرته فى إنجلترا، سويت حقن مجهرى ونجح، بجد فى مصر عندنا مستويات عالية من العلم",                                     author: "ملك المهدى" }, en: { text: "His experience in the UK made a real difference. My IVF succeeded — Egypt truly has world-class medical standards.",                             author: "Malak Elmahdy"} },
 ];
 
 export const DOCTOR_CREDENTIALS_I18N = [
-  { ar: "استشارى أمراض النساء والتوليد والحقن المجهرى والمناظير", en: "Consultant OB/GYN, IVF & Laparoscopy" },
+  { ar: "استشارى أمراض النساء والتوليد والحقن المجهري والمناظير", en: "Consultant OB/GYN, IVF & Laparoscopy" },
   { ar: "طب القصر العينى - جامعة القاهرة",                        en: "Kasr Al-Ainy Faculty of Medicine, Cairo University" },
-  { ar: "عضو الجمعية الملكية لجراحات النساء والتوليد بإنجلترا",   en: "Member, Royal College of Obstetricians & Gynaecologists (UK)" },
-  { ar: "عضو الجمعية الأمريكية لتأخر الإنجاب والحقن المجهرى",    en: "Member, American Society for Reproductive Medicine (ASRM)" },
+  { ar: "عضو الجمعية الملكية لجراحات النساء والتوليد بإنجلترا",   en: "Member of the Royal College of Obstetricians and Gynaecologists (UK) - RCOG" },
+  { ar: "عضو الجمعية الأمريكية لتأخر الإنجاب والحقن المجهري",    en: "Member of the American Society for Reproductive Medicine - ASRM" },
 ];
 
 // ── UI string translations ────────────────────────────────────────────────
@@ -94,7 +94,7 @@ export const UI = {
     heroTitle2: "القلب",
     heroTitle3: "إلى",
     heroTitle4: "الأمومة",
-    heroDesc: "عيادة دكتور محمد الدمياطي — خبرة طبية متميزة في أمراض النساء والتوليد والحقن المجهرى، بأجواء من الدفء والأمان.",
+    heroDesc: "عيادة د. محمد الدمياطي — خبرة طبية متميزة في أمراض النساء والتوليد والحقن المجهري، في أجواء من الدفء والأمان.",
     available: "متاح للحجز",
     branches4: "4 فروع بالقاهرة",
     doctorName: "د. محمد الدمياطي",
@@ -104,8 +104,7 @@ export const UI = {
     trust3: "عضو الجمعية الملكية البريطانية",
     // About
     aboutBadge: "عن الدكتور",
-    aboutBio: "التحقت بكلية طب القصر العينى جامعة القاهرة. اخترت دراسة طب النساء والتوليد لشغفى بممارسته؛ إذ أنها دراسة معجزة الحياة، كما أنها دراسة أكثر النفسيات تعقيداً فى العالم وهى نفسية المرأة.",
-    mapTitle: "موقع عيادة دكتور محمد الدمياطي",
+    aboutBio: "لتحقت بكلية طب القصر العيني بجامعة القاهرة، واخترت دراسة طب النساء والتوليد لشغفي بهذا التخصص؛ إذ إنه تخصص يرتبط بمعجزة الحياة، ويتطلب فهمًا عميقًا لاحتياجات المرأة ورعايتها في مختلف مراحل حياتها.",
     spec1: "حقن مجهرى", spec2: "ولادة بدون ألم", spec3: "مناظير نسائية", spec4: "جراحات نسائية",
     // Services
     servicesBadge: "خدماتنا",
@@ -114,7 +113,7 @@ export const UI = {
     servicesDesc: "نقدم مجموعة شاملة من الخدمات الطبية المتخصصة بأحدث التقنيات",
     opRoomAlt: "غرفة العمليات في عيادة دكتور محمد الدمياطي",
     catAll: "الكل",
-    cats: ["إنجاب","ولادة","حمل","جراحة","علاج","تشخيص","وقاية","تجميل"],
+    cats: ["خصوبة","ولادة","حمل","جراحة","علاج","تشخيص","وقاية","تجميل"],
     // Stats — labels come from STATS_I18N
     // Video
     videoBadge: "من العيادة",
@@ -145,7 +144,7 @@ export const UI = {
     contactBadge: "تواصل معنا",
     contactTitle: "نحن هنا",
     contactHighlight: "من أجلك",
-    contactSubDesc: "تواصل معنا عبر أى وسيلة تناسبك لحجز موعدك",
+    contactSubDesc: "تواصل معنا عبر أي وسيلة تناسبك لحجز موعدك",
     whatsappLabel: "واتساب",
     phoneLabel: "هاتف",
     addressLabel: "العنوان",
@@ -156,7 +155,7 @@ export const UI = {
     bookDesc: "تواصل معنا عبر واتساب أو اتصل بنا مباشرة",
     // Footer
     footerSub: "نساء · توليد · حقن مجهرى",
-    footerDesc: "استشارى أمراض النساء والتوليد والحقن المجهرى والمناظير بطب القصر العينى جامعة القاهرة. عضو الجمعية الملكية البريطانية والجمعية الأمريكية للإنجاب.",
+    footerDesc: "استشارى أمراض النساء والتوليد والحقن المجهري والمناظير بطب القصر العينى جامعة القاهرة. عضو الجمعية الملكية البريطانية والجمعية الأمريكية للإنجاب.",
     ourBranches: "فروعنا",
     quickLinks: "روابط سريعة",
     copyright: "جميع الحقوق محفوظة.",
@@ -166,6 +165,31 @@ export const UI = {
     call: "اتصال",
     // Social
     facebook: "فيسبوك", youtube: "يوتيوب", instagram: "إنستجرام",
+    // Register and Login
+    loginTitle: "تسجيل الدخول",
+    loginMsg: "أدخل بياناتك للوصول إلى حسابك",
+    loginButton: "سجل دخول",
+    loginLoading: "جاري الدخول...",
+
+    registerTitle: "إنشاء حساب جديد",
+    registerMsg: "أنشئ حسابك للوصول إلى المحتوى الطبي، ومتابعة حالتك الطبية، والاطلاع على أحدث الأخبار والتحديثات.",
+    registerButton: "إنشئ حساب",
+    registerLoading: "جاري الإنشاء...",
+    
+    dontHaveAcc: "ليس لديك حساب؟",
+    haveAcc: "لديك حساب بالفعل؟",
+
+    name:"الاسم",
+    firstName:"الاسم الأول",
+    middleName:"الاسم الثاني",
+    lastName:"الاسم الأخير",
+    fullName:"الاسم بالكامل",
+    email:"البريد الإلكتروني",
+    password:"كلمة المرور",
+    passwordNote:"(8 أحرف على الأقل)",
+    confirmPassword:"تأكيد كلمة المرور",
+    passwordInvalid: "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، حرف كبير، حرف صغير، رقم، ورمز خاص من ! @ # $ % & _",
+    passwordMismatch: "كلمتا المرور غير متطابقتين"
   },
   en: {
     skip: "Skip to main content",
@@ -182,16 +206,16 @@ export const UI = {
     heroTitle2: "From the Heart",
     heroTitle3: "to",
     heroTitle4: "Motherhood",
-    heroDesc: "Dr. Mohamed Eldomiaty Clinic — distinguished medical expertise in obstetrics, gynecology, and IVF, in a warm and safe environment.",
-    available: "Available for Booking",
+    heroDesc: "Dr. Mohamed Eldomiaty Clinic — Expert obstetrics, gynecology, and fertility care delivered in a warm and supportive environment.",
+    available: "Appointments Available",
     branches4: "4 Branches in Cairo",
     doctorName: "Dr. Mohamed Eldomiaty",
     doctorSub: "Consultant OB/GYN & IVF Specialist",
     trust1: "15+ Years Experience",
     trust2: "20000+ Successful Cases",
-    trust3: "Member, Royal College UK",
+    trust3: "RCOG Member (UK)",
     aboutBadge: "About the Doctor",
-    aboutBio: "I graduated from Kasr Al-Ainy Faculty of Medicine, Cairo University. I chose obstetrics and gynecology out of passion — it is the study of life's miracle and the most complex psychology in the world: the female mind.",
+    aboutBio: "I graduated from Kasr Al-Ainy Faculty of Medicine, Cairo University. I chose obstetrics and gynecology because I am passionate about caring for women through every stage of life and being part of one of life's greatest miracles.",
     mapTitle: "Dr. Eldomiaty Clinic Location",
     spec1: "IVF / ICSI", spec2: "Painless Delivery", spec3: "Laparoscopy", spec4: "Gynecological Surgery",
     servicesBadge: "Our Services",
@@ -210,7 +234,7 @@ export const UI = {
     branchesBadge: "Our Branches",
     branchesTitle: "We Are",
     branchesHighlight: "Close to You",
-    branchesDesc: "4 branches across Cairo's key districts to serve you",
+    branchesDesc: "Four conveniently located branches across Cairo.",
     bookBranch: "Book at this branch",
     contactNow: "Contact Us Now",
     contactDesc: "We are here to answer all your questions",
@@ -226,7 +250,7 @@ export const UI = {
     contactBadge: "Contact Us",
     contactTitle: "We Are Here",
     contactHighlight: "For You",
-    contactSubDesc: "Reach us through any channel that suits you to book your appointment.",
+    contactSubDesc: "Get in touch through your preferred channel to book an appointment.",
     whatsappLabel: "WhatsApp",
     phoneLabel: "Phone",
     addressLabel: "Address",
@@ -234,8 +258,8 @@ export const UI = {
     emailLabel: "Email",
     followUs: "Follow Us",
     bookNow: "Book Your Appointment",
-    bookDesc: "Contact us via WhatsApp or call us directly.",
-    footerSub: "OB/GYN · Delivery · IVF",
+    bookDesc: "Contact us on WhatsApp or give us a call to book your appointment.",
+    footerSub: "OB/GYN · Fertility · IVF",
     footerDesc: "Consultant OB/GYN, IVF & Laparoscopy, Kasr Al-Ainy Faculty of Medicine, Cairo University. Member of the Royal College of Obstetricians & Gynaecologists (UK) and the American Society for Reproductive Medicine.",
     ourBranches: "Our Branches",
     quickLinks: "Quick Links",
@@ -244,6 +268,31 @@ export const UI = {
     madeFor: "for Egyptian women's health",
     call: "Call",
     facebook: "Facebook", youtube: "YouTube", instagram: "Instagram",
+    // Register and Login
+    loginTitle: "Login",
+    loginMsg: "Enter your info to access your account",
+    loginButton: "Login",
+    loginLoading: "Logging in...",
+
+    registerTitle: "Create New Account",
+    registerMsg: "Create an account to access exclusive medical content, manage your medical records, and stay updated with the latest news.",
+    registerButton: "Register",
+    registerLoading: "Registering...",
+    
+    dontHaveAcc: "Don't have an account?",
+    haveAcc: "Already have an account?",
+    
+    name:"Name",
+    firstName:"First Name",
+    middleName:"Middle Name",
+    lastName:"Last Name",
+    fullName:"Full Name",
+    email:"Email",
+    password:"Password",
+    confirmPassword:"Confirm Password",
+    passwordNote:"(At least 8 characters)",
+    passwordInvalid: "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character (! @ # $ % & _)",
+    passwordMismatch: "Passwords do not match"
   },
 } as const;
 
