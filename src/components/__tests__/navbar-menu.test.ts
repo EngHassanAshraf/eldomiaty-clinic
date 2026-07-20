@@ -5,9 +5,11 @@ describe('navbar menu helpers', () => {
   it('returns user menu items for regular users', () => {
     const items = getAccountMenuItems('USER', 'en');
 
-    expect(items.map((item) => item.key)).toEqual(['profile', 'orders', 'files', 'logout']);
+    expect(items.map((item) => item.key)).toEqual(['profile', 'appointments', 'orders', 'logout']);
     expect(items[0].href).toBe('/profile');
-    expect(items[1].href).toBe('/payment/my-requests');
+    expect(items[1].href).toBe('/appointments');
+    expect(items[2].href).toBe('/payment/my-requests');
+    expect(items[3].action).toBe('logout');
   });
 
   it('returns admin menu items for administrators', () => {
@@ -15,7 +17,8 @@ describe('navbar menu helpers', () => {
 
     expect(items.map((item) => item.key)).toEqual(['dashboard', 'settings', 'logout']);
     expect(items[0].href).toBe('/dashboard');
-    expect(items[1].href).toBe('/maintenance');
+    expect(items[1].href).toBe('/settings');
+    expect(items[2].action).toBe('logout');
   });
 
   it('uses the email prefix as a fallback profile label', () => {
