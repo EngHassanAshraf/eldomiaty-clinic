@@ -31,7 +31,8 @@ export default function Navbar() {
 
   const toggleLocale = () => setLocale(locale === "ar" ? "en" : "ar");
   const closeMenu    = () => setOpen(false);
-
+  
+  
   const handleLogout = async () => {
     if (loggingOut) return;
     setLoggingOut(true);
@@ -105,16 +106,6 @@ export default function Navbar() {
                 {link.label[locale]}
               </Link>
             ))}
-            {isAuthenticated && !isLoading && (
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="px-3.5 py-2 text-sm font-medium text-gray-600 rounded-full hover:text-[#E91E63] hover:bg-[#E91E63]/8 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-[#E91E63] focus-visible:outline-offset-2 disabled:opacity-60"
-              >
-                {loggingOut ? (isRTL ? "جارى الخروج..." : "Logging out...") : isRTL ? "تسجيل الخروج" : "Logout"}
-              </button>
-            )}
           </nav>
 
           {/* Desktop actions */}
@@ -149,8 +140,10 @@ export default function Navbar() {
 
             {!isLoading && isAuthenticated && user && (
               <>
+
               <AccountDropdown
                 displayName={displayName}
+                role={user.role === 'ADMIN' ? (isRTL ? 'مسؤول' : 'Administrator') : undefined}
                 items={accountItems}
                 locale={locale}
                 onAction={(item) => {
@@ -168,7 +161,7 @@ export default function Navbar() {
                   style={{ background: "linear-gradient(135deg, #6BADEB 0%, #3A8DDE 100%)" }}
                 >
                   {t.cta}
-                </a>
+              </a>
                 </>
             )}
 
@@ -212,6 +205,9 @@ export default function Navbar() {
               </span>
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-gray-800">{displayName}</p>
+                {user.role === 'ADMIN' && (
+                  <p className="text-xs text-gray-500">{isRTL ? 'مسؤول' : 'Administrator'}</p>
+                )}
                 <p className="truncate text-xs text-gray-500" dir="ltr">{user.email}</p>
               </div>
             </div>
@@ -221,17 +217,19 @@ export default function Navbar() {
               {accountItems.map((item) => {
                 if (item.action === "logout") {
                   return (
-                    <button
-                      key={item.key}
-                      type="button"
-                      onClick={() => {
-                        closeMenu();
-                        void handleLogout();
-                      }}
-                      className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-[#FDE8EF] hover:text-[#E91E63]"
-                    >
-                      <span>{item.label[locale]}</span>
-                    </button>
+                    <div key={item.key}>
+                      <div className="my-1 h-px bg-gray-100" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          closeMenu();
+                          void handleLogout();
+                        }}
+                        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-[#FDE8EF] hover:text-[#E91E63]"
+                      >
+                        <span>{item.label[locale]}</span>
+                      </button>
+                    </div>
                   );
                 }
 
@@ -258,16 +256,6 @@ export default function Navbar() {
               {link.label[locale]}
             </Link>
           ))}
-          {isAuthenticated && !isLoading && (
-            <button
-              type="button"
-              onClick={handleLogout}
-              disabled={loggingOut}
-              className="flex w-full items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-xl hover:text-[#E91E63] hover:bg-[#E91E63]/8 transition-all duration-200 disabled:opacity-60"
-            >
-              {loggingOut ? (isRTL ? "جارى الخروج..." : "Logging out...") : isRTL ? "تسجيل الخروج" : "Logout"}
-            </button>
-          )}
           <div className="h-px bg-gray-100 my-2" />
           <div className="flex flex-col gap-2 px-1 pb-1">
             {/* Skeleton placeholders while auth state is resolving.
