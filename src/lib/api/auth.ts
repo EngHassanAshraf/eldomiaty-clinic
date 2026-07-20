@@ -3,6 +3,7 @@ import { ApiError } from './types';
 
 export type AuthUserResponse = {
   userId: string;
+  name: string;
   role: 'ADMIN' | 'USER';
   isPaid: boolean;
 };
@@ -15,10 +16,10 @@ export const authApi = {
       skipAuth: true,
     }),
 
-  register: (email: string, password: string) =>
+  register: (name: string, email: string, password: string, confirmPassword: string) =>
     apiFetch<AuthUserResponse>('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({name, email, password, confirmPassword}),
       skipAuth: true,
     }),
 
