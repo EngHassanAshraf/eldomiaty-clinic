@@ -38,7 +38,7 @@ enum PaymentStatus {
 
 model User {
   id           String   @id @default(cuid())
-  name        String?   @db.VarChar(150)
+  name         String   @db.VarChar(150)
   email        String   @unique @db.VarChar(320)
   passwordHash String   @map("password_hash")
   role         Role     @default(USER)

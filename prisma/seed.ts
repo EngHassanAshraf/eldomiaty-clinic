@@ -22,6 +22,7 @@ async function main() {
     where: { email: ADMIN_EMAIL },
     update: {},
     create: {
+      name: "El-Domiaty Admin",
       email: ADMIN_EMAIL,
       passwordHash,
       role: Role.ADMIN,
