@@ -7,7 +7,7 @@ import { generateRefreshToken, hashRefreshToken, refreshExpiresAt } from './toke
 export type AuthTokens = { accessToken: string; refreshToken: string };
 
 export type IssueResult = AuthTokens & {
-  user: { id: string; email: string; role: Role; isPaid: boolean };
+  user: { id: string; name:string; email: string; role: Role; isPaid: boolean };
 };
 
 type SessionMeta = { deviceInfo?: string; ipAddress?: string };
@@ -16,10 +16,7 @@ type SessionMeta = { deviceInfo?: string; ipAddress?: string };
 // Private helpers
 // ---------------------------------------------------------------------------
 
-async function issueTokens(
-  user: { id: string; email: string; role: Role; isPaid: boolean },
-  meta?: SessionMeta
-): Promise<IssueResult> {
+async function issueTokens(user: { id: string; name:string, email: string; role: Role; isPaid: boolean },meta?: SessionMeta): Promise<IssueResult> {
   const refreshToken = generateRefreshToken();
   await prisma.userSession.create({
     data: {
@@ -37,7 +34,7 @@ async function issueTokens(
 type RotateResult = {
   accessToken: string;
   refreshToken: string;
-  user: { id: string; email: string; role: Role; isPaid: boolean };
+  user: { id: string; name:string; email: string; role: Role; isPaid: boolean };
 };
 
 /**
@@ -46,10 +43,7 @@ type RotateResult = {
  * Returns new tokens together with the full user record so callers that need
  * the user (refreshAndGetUser) don't require a second DB query.
  */
-async function rotateSession(
-  refreshToken: string,
-  meta?: SessionMeta
-): Promise<RotateResult> {
+async function rotateSession(refreshToken: string, meta?: SessionMeta): Promise<RotateResult> {
   const session = await prisma.userSession.findUnique({
     where: { refreshTokenHash: hashRefreshToken(refreshToken) },
     include: { user: true },
@@ -79,7 +73,7 @@ async function rotateSession(
   return {
     accessToken,
     refreshToken: newRefreshToken,
-    user: { id: user.id, email: user.email, role: user.role, isPaid: user.isPaid },
+    user: { id: user.id, name:user.name, email: user.email, role: user.role, isPaid: user.isPaid },
   };
 }
 
@@ -88,15 +82,20 @@ async function rotateSession(
 // ---------------------------------------------------------------------------
 
 export async function register(
+  name: string,
   email: string,
   password: string,
+  confirmPassword: string,
   meta?: SessionMeta
 ): Promise<IssueResult> {
   const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) throw new Error('Email already registered');
+  const passwordMissmatch= password === confirmPassword;
+
+  if (existing) throw new Error("exist");
+  if (!passwordMissmatch) throw new Error('miss-match');
 
   const user = await prisma.user.create({
-    data: { email, passwordHash: await hashPassword(password), role: Role.USER },
+    data: { name, email, passwordHash: await hashPassword(password), role: Role.USER },
   });
   return issueTokens(user, meta);
 }
@@ -110,6 +109,7 @@ export async function login(
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
     throw new Error('Invalid credentials');
   }
+
   return issueTokens(user, meta);
 }
 
@@ -122,7 +122,7 @@ export async function refresh(
 }
 
 export type RefreshWithUserResult = AuthTokens & {
-  user: { id: string; email: string; role: Role; isPaid: boolean };
+  user: { id: string; name:string; email: string; role: Role; isPaid: boolean };
 };
 
 /**

@@ -18,7 +18,7 @@ export async function getServerUser(): Promise<User | null> {
     return {
       id: payload.userId,
       email: payload.email,
-      name: payload.email, // displayName fallback
+      name: payload.name, // displayName fallback
       role: payload.role,
       isPaid: payload.isPaid,
     };
