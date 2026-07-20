@@ -19,15 +19,15 @@ export default function Home() {
         <Hero />
         <About />
         <Stats />
-        <Services />
         <VideoSection />
+        <Services />
         <Branches />
         <Testimonials />
         <Contact />
       </main>
       <Footer />
       <WhatsAppFAB />
-      <MobileCTA />
+      {/* <MobileCTA /> */}
     </>
   );
 }
