@@ -30,7 +30,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-section-a section-padding">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 py-25 sm:px-6">
         <div className="section-header">
           <span className="badge-rose">لوحة التحكم</span>
           <h1 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
@@ -47,8 +47,8 @@ export default function DashboardPage() {
               onClick={() => setActiveTab(id)}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 activeTab === id
-                  ? 'grad-rose text-white shadow-rose'
-                  : 'bg-white/80 text-[#6b4c4c] border border-[#fad4db]/60 hover:border-[#e8294a]/40 hover:text-[#e8294a]'
+                  ? 'grad-rose text-white shadow-rose bg-secondary border border-[#fad4db]/60 cursor-pointer'
+                  : 'bg-white/80 text-(--secondary) border border-[#fad4db]/60 hover:border-[#e8294a]/40 hover:text-[#e8294a] cursor-pointer'
               }`}
             >
               <Icon size={16} />

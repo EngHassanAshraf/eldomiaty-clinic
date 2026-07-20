@@ -15,7 +15,7 @@ export default function ProfilePage() {
   const displayName = getProfileDisplayName(user);
 
   return (
-    <main className="min-h-screen bg-[#FFF8FB] px-4 py-24 text-[#2d1a1a] sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#FFF8FB] px-4 py-40 text-[#2d1a1a] sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         <section className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -52,7 +52,7 @@ export default function ProfilePage() {
             <p className="mt-2 text-sm text-gray-500">Track your orders and subscription status.</p>
           </Link>
 
-          <Link href="/maintenance" className="rounded-[20px] border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+          <Link href="/settings" className="rounded-[20px] border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
             <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FCE7F0] text-[#E91E63]">
               <Settings2 size={20} />
             </div>

@@ -62,7 +62,7 @@ export default function ArticlesPage() {
     if (!isAdmin) {
         return (
             <main className="min-h-screen bg-[#FFF8FB] px-4 py-35 text-[#2d1a1a] sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
-                <div className="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-[32px] border border-gray-200 bg-white px-8 py-20 text-center shadow-sm">
+                <div className="mx-auto flex max-w-4xl flex-col items-center justify-center rounded-4xl border border-gray-200 bg-white px-8 py-20 text-center shadow-sm">
                     <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#E91E63]/10 text-3xl font-bold text-[#E91E63]">
                         ✚
                     </div>
@@ -75,20 +75,20 @@ export default function ArticlesPage() {
     }
 
     return (
-        <main className="min-h-screen bg-[#FFF8FB] px-4 py-24 text-[#2d1a1a] sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+        <main className="min-h-screen bg-[#FFF8FB] px-4 py-35 text-[#2d1a1a] sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
             <div className="mx-auto flex max-w-6xl flex-col gap-6">
-                <section className="flex flex-col gap-4 rounded-[24px] border border-gray-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
+                <section className="flex flex-col gap-4 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
                     <div>
                         <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#3A8DDE]">{pageTitle}</p>
                         <h1 className="mt-2 text-2xl font-bold sm:text-3xl">{locale === 'ar' ? 'إدارة المقالات' : 'Articles Management'}</h1>
                     </div>
-                    <button type="button" className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#E91E63] px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#d0175b]">
+                    <button type="button" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#E91E63] px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#d0175b]">
                         <Plus size={16} />
                         {locale === 'ar' ? 'مقالة جديدة' : 'New Article'}
                     </button>
                 </section>
 
-                <section className="overflow-hidden rounded-[24px] border border-gray-200 bg-white shadow-sm">
+                <section className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200 text-sm">
                             <thead className="bg-[#FFF7FA] text-left text-gray-600">

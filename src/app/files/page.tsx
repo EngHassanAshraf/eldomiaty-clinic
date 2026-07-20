@@ -35,7 +35,7 @@ export default function FilesPage() {
 
   return (
     <div className="min-h-screen bg-section-a section-padding">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto py-25 px-4 sm:px-6">
         <div className="section-header">
           <span className="badge-rose">المحتوى الطبي</span>
           <h1 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">

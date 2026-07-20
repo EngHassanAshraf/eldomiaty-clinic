@@ -14,7 +14,7 @@ interface FormState {
 
 function FieldCard({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-sm">
+    <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-5">
         <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         <p className="mt-1 text-sm text-gray-500">{description}</p>
@@ -79,7 +79,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FFF8FB] px-4 py-24 text-[#2d1a1a] sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <main className="min-h-screen bg-[#FFF8FB] px-4 py-35 text-[#2d1a1a] sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="mx-auto flex max-w-6xl flex-col gap-6">
         <section className="flex flex-col gap-4 rounded-[28px] border border-gray-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div className="flex items-center gap-3">

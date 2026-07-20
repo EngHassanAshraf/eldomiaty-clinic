@@ -50,7 +50,7 @@ export default function FileDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="min-h-screen bg-section-b section-padding">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto py-15 px-4 sm:px-6">
         <Link href="/files" className="inline-flex items-center gap-2 text-sm text-[#8a6a6a] hover:text-[#e8294a] transition-colors mb-6">
           <ArrowRight size={16} />
           العودة إلى الملفات

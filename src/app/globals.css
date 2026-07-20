@@ -103,6 +103,12 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.10);
   }
 
+
+  /* ── Backgrounds ── */
+
+  .bg-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); }
+  .bg-secondary { background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%); }
+
   /* ── Buttons ── */
 
   .btn-primary {
@@ -224,7 +230,7 @@
   }
 
   /* ── Layout ── */
-  .section-padding { padding-top: 5rem; padding-bottom: 5rem; }
+  .section-padding { padding-top: 2rem; padding-bottom: 2rem; }
   .section-header  { text-align: center; margin-bottom: 3rem; }
 
   /* ── Sticky mobile CTA bar ── */
