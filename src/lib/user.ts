@@ -14,6 +14,7 @@ import type { User } from '@/lib/api/types';
 export function getProfileDisplayName(
   user: Pick<User, 'email'> & Partial<Pick<User, 'name'>>
 ): string {
+
   const name = typeof user.name === 'string' && user.name.trim() ? user.name.trim() : '';
   if (name) return name;
 
