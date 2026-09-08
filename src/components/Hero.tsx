@@ -3,11 +3,12 @@ import { MessageCircle, Phone, Shield, Award, Star } from "lucide-react";
 import Image from "next/image";
 import { CLINIC } from "@/lib/data";
 import { useLocale } from "@/lib/LocaleContext";
-import { UI } from "@/lib/i18n";
+import { UI, resources } from "@/lib/i18n";
 
 export default function Hero() {
   const { locale } = useLocale();
   const t = UI[locale];
+  const copy = resources[locale];
   const isRTL = locale === "ar";
 
   const trustBadges = [
@@ -23,6 +24,10 @@ export default function Hero() {
     { n: "100%",   l: isRTL ? "رضا المرضى" : "Satisfaction" },
   ];
 
+  const [heroTitleLead, heroTitleAccent] = copy.hero.title
+    .split("..")
+    .map((part) => part.trim());
+
   return (
     <section id="home" className="relative min-h-screen flex items-center overflow-hidden bg-hero">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-35 pb-20 w-full">
@@ -34,22 +39,17 @@ export default function Hero() {
 
             <div className="space-y-3">
               <h1 className="text-4xl sm:text-5xl lg:text-[3.2rem] font-black text-[#2d1a1a] leading-[1.15] tracking-tight">
-                {isRTL ? (
+                {heroTitleAccent ? (
                   <>
-                    رعاية تبدأ من<br />
-                    <span className="text-grad-primary">القلب</span>{" "}إلى{" "}
-                    <span className="text-grad-primary">الأمومة</span>
+                    {heroTitleLead}
+                    <br />
+                    <span className="text-grad-primary">{heroTitleAccent}</span>
                   </>
                 ) : (
-                  <>
-                    Care That Starts<br />
-                    <span className="text-grad-primary">From the Heart</span>
-                    <br />
-                    <span className="text-grad-primary">to Motherhood</span>
-                  </>
+                  copy.hero.title
                 )}
               </h1>
-              <p className="text-base text-[#6b7280] leading-[1.8] max-w-lg">{t.heroDesc}</p>
+              <p className="text-base text-[#6b7280] leading-[1.8] max-w-lg">{copy.hero.subtitle}</p>
             </div>
 
             <div className="flex flex-wrap gap-2">
