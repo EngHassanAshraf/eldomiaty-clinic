@@ -37,7 +37,13 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
-  register: (name:string, email: string, password: string, confirmPassword: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    phone: string,
+    password: string,
+    confirmPassword: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<User | null>;
 }
@@ -45,7 +51,17 @@ interface AuthContextValue extends AuthState {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function toUser(data: AuthUserResponse, email: string): User {
-  return { id: data.userId, name:data.name, email, role: data.role, isPaid: data.isPaid };
+  return {
+    id: data.userId,
+    name: data.name,
+    email,
+    phone: data.phone,
+    emailVerified: data.emailVerified,
+    phoneVerified: data.phoneVerified,
+    role: data.role,
+    isPaid: data.isPaid,
+    isActive: data.isActive,
+  };
 }
 
 
@@ -119,10 +135,16 @@ export function AuthProvider({
     applySession(toUser(data, email));
   }, [applySession]);
 
-  const register = useCallback(async (name:string, email: string, password: string, confirmPassword: string) => {
+  const register = useCallback(async (
+    name: string,
+    email: string,
+    phone: string,
+    password: string,
+    confirmPassword: string
+  ) => {
     // Same reasoning as login(): authApi.register() returns AuthUserResponse
     // and email is already in scope — no need to call me() again.
-    const data = await authApi.register(name, email, password, confirmPassword);
+    const data = await authApi.register(name, email, phone, password, confirmPassword);
     applySession(toUser(data, email));
   }, [applySession]);
 

@@ -19,8 +19,12 @@ export async function getServerUser(): Promise<User | null> {
       id: payload.userId,
       email: payload.email,
       name: payload.name, // displayName fallback
+      phone: '',
+      emailVerified: false,
+      phoneVerified: false,
       role: payload.role,
       isPaid: payload.isPaid,
+      isActive: true,
     };
   } catch {
     return null;

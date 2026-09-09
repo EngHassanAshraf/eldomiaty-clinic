@@ -10,7 +10,7 @@ import { setAuthCookies } from '@/lib/auth/cookies';
  * AuthProvider startup.  The existing /api/auth/refresh and /api/auth/me
  * endpoints are intentionally left untouched.
  *
- * On success: rotates auth cookies and returns { id, name, email, role, isPaid }.
+ * On success: rotates auth cookies and returns the authenticated user.
  * On failure: 401 -- client should transition to unauthenticated state.
  */
 export async function GET(req: NextRequest) {
@@ -27,8 +27,12 @@ export async function GET(req: NextRequest) {
       id: user.id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
+      emailVerified: user.emailVerified,
+      phoneVerified: user.phoneVerified,
       role: user.role,
       isPaid: user.isPaid,
+      isActive: user.isActive,
     });
 
     return setAuthCookies(res, accessToken, newRefreshToken);

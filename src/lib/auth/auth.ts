@@ -6,8 +6,20 @@ import { generateRefreshToken, hashRefreshToken, refreshExpiresAt } from './toke
 
 export type AuthTokens = { accessToken: string; refreshToken: string };
 
+export type AuthUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  role: Role;
+  isPaid: boolean;
+  isActive: boolean;
+};
+
 export type IssueResult = AuthTokens & {
-  user: { id: string; name:string; email: string; role: Role; isPaid: boolean };
+  user: AuthUser;
 };
 
 type SessionMeta = { deviceInfo?: string; ipAddress?: string };
@@ -16,7 +28,31 @@ type SessionMeta = { deviceInfo?: string; ipAddress?: string };
 // Private helpers
 // ---------------------------------------------------------------------------
 
-async function issueTokens(user: { id: string; name:string, email: string; role: Role; isPaid: boolean },meta?: SessionMeta): Promise<IssueResult> {
+function toAuthUser(user: {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
+  role: Role;
+  isPaid: boolean;
+  isActive: boolean;
+}): AuthUser {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    emailVerified: user.emailVerified,
+    phoneVerified: user.phoneVerified,
+    role: user.role,
+    isPaid: user.isPaid,
+    isActive: user.isActive,
+  };
+}
+
+async function issueTokens(user: AuthUser, meta?: SessionMeta): Promise<IssueResult> {
   const refreshToken = generateRefreshToken();
   await prisma.userSession.create({
     data: {
@@ -34,7 +70,7 @@ async function issueTokens(user: { id: string; name:string, email: string; role:
 type RotateResult = {
   accessToken: string;
   refreshToken: string;
-  user: { id: string; name:string; email: string; role: Role; isPaid: boolean };
+  user: AuthUser;
 };
 
 /**
@@ -55,6 +91,9 @@ async function rotateSession(refreshToken: string, meta?: SessionMeta): Promise<
   }
 
   const { user } = session;
+  if (!user.isActive) {
+    throw new Error('account-disabled');
+  }
   await prisma.userSession.delete({ where: { id: session.id } });
 
   const newRefreshToken = generateRefreshToken();
@@ -73,7 +112,7 @@ async function rotateSession(refreshToken: string, meta?: SessionMeta): Promise<
   return {
     accessToken,
     refreshToken: newRefreshToken,
-    user: { id: user.id, name:user.name, email: user.email, role: user.role, isPaid: user.isPaid },
+    user: toAuthUser(user),
   };
 }
 
@@ -84,20 +123,33 @@ async function rotateSession(refreshToken: string, meta?: SessionMeta): Promise<
 export async function register(
   name: string,
   email: string,
+  phone: string,
   password: string,
   confirmPassword: string,
   meta?: SessionMeta
 ): Promise<IssueResult> {
   const existing = await prisma.user.findUnique({ where: { email } });
   const passwordMissmatch= password === confirmPassword;
+  const normalizedPhone = phone.trim();
 
   if (existing) throw new Error("exist");
   if (!passwordMissmatch) throw new Error('miss-match');
+  if (!normalizedPhone || normalizedPhone.length < 8 || normalizedPhone.length > 20) {
+    throw new Error('invalid-phone');
+  }
 
   const user = await prisma.user.create({
-    data: { name, email, passwordHash: await hashPassword(password), role: Role.USER },
+    data: {
+      name,
+      email,
+      phone: normalizedPhone,
+      emailVerified: false,
+      phoneVerified: false,
+      passwordHash: await hashPassword(password),
+      role: Role.USER,
+    },
   });
-  return issueTokens(user, meta);
+  return issueTokens(toAuthUser(user), meta);
 }
 
 export async function login(
@@ -109,8 +161,11 @@ export async function login(
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
     throw new Error('Invalid credentials');
   }
+  if (!user.isActive) {
+    throw new Error('account-disabled');
+  }
 
-  return issueTokens(user, meta);
+  return issueTokens(toAuthUser(user), meta);
 }
 
 export async function refresh(
@@ -122,7 +177,7 @@ export async function refresh(
 }
 
 export type RefreshWithUserResult = AuthTokens & {
-  user: { id: string; name:string; email: string; role: Role; isPaid: boolean };
+  user: AuthUser;
 };
 
 /**

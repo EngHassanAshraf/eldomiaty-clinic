@@ -11,12 +11,20 @@ export async function POST(req: NextRequest) {
     const tokens = await login(email, password);
     const res = NextResponse.json({
       userId: tokens.user.id,
-      name:tokens.user.name,
+      name: tokens.user.name,
+      phone: tokens.user.phone,
+      emailVerified: tokens.user.emailVerified,
+      phoneVerified: tokens.user.phoneVerified,
       role: tokens.user.role,
       isPaid: tokens.user.isPaid,
+      isActive: tokens.user.isActive,
     });
     return setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
-  } catch {
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : 'Invalid credentials';
+    if (msg === 'account-disabled') {
+      return NextResponse.json({ error: msg }, { status: 403 });
+    }
     return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
   }
 }
