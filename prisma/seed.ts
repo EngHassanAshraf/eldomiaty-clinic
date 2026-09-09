@@ -24,6 +24,10 @@ async function main() {
     create: {
       name: "El-Domiaty Admin",
       email: ADMIN_EMAIL,
+      phone: PAYMENT_NUMBER,
+      emailVerified: true,
+      phoneVerified: true,
+      isActive: true,
       passwordHash,
       role: Role.ADMIN,
     },
