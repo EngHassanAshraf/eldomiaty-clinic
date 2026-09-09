@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Settings2, ShieldCheck, Building2, MessageCircleMore, Save, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import { useLocale } from '@/lib/LocaleContext';
+import { UI } from '@/lib/i18n';
 
 interface FormState {
   registrationEnabled: boolean;
@@ -51,7 +52,7 @@ function TextField({ label, value, onChange, placeholder }: { label: string; val
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-11 w-full rounded-[12px] border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none transition focus:border-[#3A8DDE]"
+        className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none transition focus:border-[#3A8DDE]"
       />
     </label>
   );
@@ -60,6 +61,7 @@ function TextField({ label, value, onChange, placeholder }: { label: string; val
 export default function SettingsPage() {
   const { isLoading, user } = useRequireAuth({ requiredRole: 'ADMIN', redirectTo: '/' });
   const { locale } = useLocale();
+  const t = UI[locale];
   const isRTL = locale === 'ar';
   const [form, setForm] = useState<FormState>({
     registrationEnabled: true,
@@ -87,73 +89,73 @@ export default function SettingsPage() {
               <Settings2 size={22} />
             </div>
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#3A8DDE]">{locale === 'ar' ? 'الإعدادات' : 'Site Settings'}</p>
-              <h1 className="text-2xl font-bold sm:text-3xl">{locale === 'ar' ? 'إدارة إعدادات الموقع' : 'Manage Site Settings'}</h1>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#3A8DDE]">{t.siteSettings}</p>
+              <h1 className="text-2xl font-bold sm:text-3xl">{t.manageSiteSettings}</h1>
             </div>
           </div>
           <button
             type="button"
             onClick={handleSave}
-            className="inline-flex items-center justify-center gap-2 rounded-[12px] bg-[#E91E63] px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#d0175b]"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#E91E63] px-4 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#d0175b]"
           >
             <Save size={16} />
-            {isSaving ? (locale === 'ar' ? 'جارٍ الحفظ...' : 'Saving...') : (locale === 'ar' ? 'حفظ التغييرات' : 'Save Changes')}
+            {isSaving ? t.saving : t.saveChanges}
           </button>
         </section>
 
         <div className="grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
           <div className="space-y-6">
             <FieldCard
-              title={locale === 'ar' ? 'عام' : 'General'}
-              description={locale === 'ar' ? 'تحكم في التسجيل والوصول العام إلى الموقع.' : 'Control registration and the site availability.'}
+              title={t.general}
+              description={t.controlRegistration}
             >
               <SwitchField
-                label={locale === 'ar' ? 'التسجيل مفعل' : 'Registration Enabled'}
-                description={locale === 'ar' ? 'السماح للمستخدمين الجدد بإنشاء حسابات.' : 'Allow new users to create accounts.'}
+                label={t.registrationEnabled}
+                description={t.allowNewUsers}
                 checked={form.registrationEnabled}
                 onChange={(value) => setForm((current) => ({ ...current, registrationEnabled: value }))}
               />
               <SwitchField
-                label={locale === 'ar' ? 'وضع الصيانة' : 'Maintenance Mode'}
-                description={locale === 'ar' ? 'إظهار صفحة الصيانة العامة مؤقتًا.' : 'Temporarily show the public maintenance page.'}
+                label={t.maintenanceMode}
+                description={t.maintenanceModeDesc}
                 checked={form.maintenanceMode}
                 onChange={(value) => setForm((current) => ({ ...current, maintenanceMode: value }))}
               />
             </FieldCard>
 
             <FieldCard
-              title={locale === 'ar' ? 'العيادة' : 'Clinic'}
-              description={locale === 'ar' ? 'تحديث بيانات العيادة التي تظهر في الموقع.' : 'Update the clinic information shown throughout the site.'}
+              title={t.clinic}
+              description={t.clinicInfoDesc}
             >
               <TextField
-                label={locale === 'ar' ? 'اسم العيادة' : 'Clinic Name'}
+                label={t.clinicName}
                 value={form.clinicName}
                 onChange={(value) => setForm((current) => ({ ...current, clinicName: value }))}
-                placeholder={locale === 'ar' ? 'أدخل اسم العيادة' : 'Enter clinic name'}
+                placeholder={t.enterClinicName}
               />
               <TextField
-                label={locale === 'ar' ? 'رقم واتساب العيادة' : 'WhatsApp Number'}
+                label={t.whatsappNumber}
                 value={form.whatsappNumber}
                 onChange={(value) => setForm((current) => ({ ...current, whatsappNumber: value }))}
-                placeholder={locale === 'ar' ? 'أدخل رقم واتساب' : 'Enter WhatsApp number'}
+                placeholder={t.enterWhatsappNumber}
               />
             </FieldCard>
           </div>
 
           <aside className="space-y-6">
-            <section className="rounded-[24px] border border-gray-200 bg-white p-6 shadow-sm">
+            <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#3A8DDE]/10 text-[#3A8DDE]">
                   <ShieldCheck size={18} />
                 </div>
                 <div>
-                  <h2 className="text-base font-semibold text-gray-900">{locale === 'ar' ? 'ماذا سيتغير؟' : 'What will change?'}</h2>
-                  <p className="text-sm text-gray-500">{locale === 'ar' ? 'سيتم ربط هذه الإعدادات بالـ API لاحقًا.' : 'These settings are prepared for future API integration.'}</p>
+                  <h2 className="text-base font-semibold text-gray-900">{t.whatWillChange}</h2>
+                  <p className="text-sm text-gray-500">{t.futureApiIntegration}</p>
                 </div>
               </div>
               <ul className="mt-4 space-y-2 text-sm text-gray-600">
-                <li className="flex items-center gap-2"><Building2 size={15} className="text-[#E91E63]" />{locale === 'ar' ? 'إعدادات العيادة' : 'Clinic details'}</li>
-                <li className="flex items-center gap-2"><MessageCircleMore size={15} className="text-[#E91E63]" />{locale === 'ar' ? 'تحديث واتساب' : 'WhatsApp contact'}</li>
+                <li className="flex items-center gap-2"><Building2 size={15} className="text-[#E91E63]" />{t.clinicDetails}</li>
+                <li className="flex items-center gap-2"><MessageCircleMore size={15} className="text-[#E91E63]" />{t.whatsappContact}</li>
               </ul>
             </section>
           </aside>

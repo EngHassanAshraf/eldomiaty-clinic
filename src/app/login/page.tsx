@@ -28,8 +28,12 @@ function LoginForm() {
       const redirect = searchParams.get('redirect') || '/';
       router.push(redirect);
     } catch (err) {
-      const msg = err instanceof ApiError ? err.message : 'حدث خطأ، حاول مرة أخرى';
-      toast.error(msg);
+      const msg = err instanceof ApiError ? err.message : t.genericError;
+      if (msg === 'account-disabled') {
+        toast.error(t.accountDisabled);
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -56,7 +60,7 @@ function LoginForm() {
                 required
                 disabled={loading}
                 className="w-full px-4 py-3 rounded-xl border border-[#fad4db]/60 bg-white/80 text-[#2d1a1a] text-sm focus:outline-none focus:border-[#e8294a]/50 focus:ring-2 focus:ring-[#e8294a]/10 transition-all disabled:opacity-60"
-                placeholder="example@email.com"
+                placeholder={t.emailPlaceholder}
                 dir="ltr"
               />
             </div>
@@ -73,7 +77,7 @@ function LoginForm() {
                 disabled={loading}
                 minLength={8}
                 className="w-full px-4 py-3 rounded-xl border border-[#fad4db]/60 bg-white/80 text-[#2d1a1a] text-sm focus:outline-none focus:border-[#e8294a]/50 focus:ring-2 focus:ring-[#e8294a]/10 transition-all disabled:opacity-60"
-                placeholder="••••••••"
+                placeholder={t.passwordPlaceholder}
                 dir="ltr"
               />
             </div>

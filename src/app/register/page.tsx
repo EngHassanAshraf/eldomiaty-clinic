@@ -22,6 +22,7 @@ export default function RegisterPage() {
 
   const [name,            setName]            = useState('');
   const [email,           setEmail]           = useState('');
+  const [phone,           setPhone]           = useState('');
   const [password,        setPassword]        = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading,         setLoading]         = useState(false);
@@ -74,19 +75,21 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await register(name, email, password, confirmPassword);
-      toast.success(locale === 'ar' ? 'تم إنشاء الحساب بنجاح' : 'Account created successfully');
+      await register(name, email, phone, password, confirmPassword);
+      toast.success(t.accountCreatedSuccess);
       router.push('/');
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : '';
       if (msg === 'exist') {
-        toast.error(locale === 'ar' ? 'البريد الإلكتروني مستخدم بالفعل' : 'Email already exists');
+        toast.error(t.emailExists);
       } else if (msg === 'miss-match') {
         setConfirmError(t.passwordMismatch);
+      } else if (msg === 'invalid-phone') {
+        toast.error(t.phoneInvalid);
       } else {
         toast.error(
           msg ||
-          (locale === 'ar' ? 'حدث خطأ، حاول مرة أخرى' : 'An error occurred. Please try again.')
+          t.genericError
         );
       }
     } finally {
@@ -143,8 +146,27 @@ export default function RegisterPage() {
                 required
                 disabled={loading}
                 className={inputClass(false)}
-                placeholder="example@email.com"
+                placeholder={t.emailPlaceholder}
                 dir="ltr"
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-semibold text-[#6b4c4c] mb-1.5">
+                {t.phone}
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                disabled={loading}
+                className={inputClass(false)}
+                placeholder={t.phonePlaceholder}
+                dir="ltr"
+                autoComplete="tel"
+                inputMode="tel"
               />
             </div>
 
@@ -160,13 +182,13 @@ export default function RegisterPage() {
                 required
                 disabled={loading}
                 className={inputClass(passwordTouched && !passwordValid)}
-                placeholder="••••••••"
+                placeholder={t.passwordPlaceholder}
                 dir="ltr"
               />
 
               {/* Requirements checklist — shown once the user starts typing */}
               {passwordTouched && (
-                <ul className="mt-2 space-y-1" aria-label={locale === 'ar' ? 'متطلبات كلمة المرور' : 'Password requirements'}>
+                <ul className="mt-2 space-y-1" aria-label={t.passwordRequirements}>
                   {requirements.map((req) => (
                     <li
                       key={req.label}
@@ -205,7 +227,7 @@ export default function RegisterPage() {
                 required
                 disabled={loading}
                 className={inputClass(!!confirmError)}
-                placeholder="••••••••"
+                placeholder={t.passwordPlaceholder}
                 dir="ltr"
               />
               {confirmError && (

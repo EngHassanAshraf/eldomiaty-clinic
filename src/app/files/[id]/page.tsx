@@ -8,9 +8,14 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from '@/lib/i18n';
+
 export default function FileDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { isLoading: authLoading, user: authUser } = useAuth();
+  const { locale } = useLocale();
+  const t = UI[locale];
   const [file, setFile] = useState<FileRecord | null>(null);
   const [userIsPaid, setUserIsPaid] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -23,7 +28,7 @@ export default function FileDetailPage({ params }: { params: Promise<{ id: strin
         const data = await filesApi.getFile(id);
         setFile(data);
       } catch (err) {
-        const msg = err instanceof ApiError ? err.message : 'فشل تحميل الملف';
+        const msg = err instanceof ApiError ? err.message : t.fileLoadFailed;
         toast.error(msg);
       } finally {
         setLoading(false);
@@ -35,7 +40,7 @@ export default function FileDetailPage({ params }: { params: Promise<{ id: strin
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-section-b section-padding flex items-center justify-center">
-        <div className="text-[#8a6a6a]">جارى التحميل...</div>
+        <div className="text-[#8a6a6a]">{t.loading}</div>
       </div>
     );
   }
@@ -43,7 +48,7 @@ export default function FileDetailPage({ params }: { params: Promise<{ id: strin
   if (!file) {
     return (
       <div className="min-h-screen bg-section-b section-padding flex items-center justify-center">
-        <div className="text-[#8a6a6a]">الملف غير موجود</div>
+        <div className="text-[#8a6a6a]">{t.fileNotFound}</div>
       </div>
     );
   }
@@ -53,7 +58,7 @@ export default function FileDetailPage({ params }: { params: Promise<{ id: strin
       <div className="max-w-4xl mx-auto py-15 px-4 sm:px-6">
         <Link href="/files" className="inline-flex items-center gap-2 text-sm text-[#8a6a6a] hover:text-[#e8294a] transition-colors mb-6">
           <ArrowRight size={16} />
-          العودة إلى الملفات
+          {t.backToFiles}
         </Link>
         <PdfViewer
           fileId={id}

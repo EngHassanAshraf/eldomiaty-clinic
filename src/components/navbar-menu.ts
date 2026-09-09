@@ -13,13 +13,14 @@ export interface NavbarMenuItem {
 export function getAccountMenuItems(role: User['role'], locale: 'ar' | 'en'): NavbarMenuItem[] {
     if (role === 'ADMIN') {
         return [
-            { key: 'dashboard', href: '/dashboard', label: { ar: 'لوحة الإدارة',      en: 'Dashboard' } },
-            { key: 'settings',  href: '/settings',  label: { ar: 'إعدادات الموقع',    en: 'Settings' } },
-            { key: 'logout', action: 'logout',       label: { ar: 'تسجيل الخروج',      en: 'Logout' } },
+            { key: 'profile',   href: '/profile',   label: { ar: 'الملف الشخصي',  en: 'Profile' } },
+            { key: 'dashboard', href: '/dashboard', label: { ar: 'لوحة الإدارة',   en: 'Dashboard' } },
+            { key: 'settings',  href: '/settings',  label: { ar: 'إعدادات الموقع', en: 'Settings' } },
+            { key: 'logout', action: 'logout',      label: { ar: 'تسجيل الخروج',   en: 'Logout' } },
         ];
     }
 
-    // USER
+    // USER — Profile must stay first so account menu always reaches /profile
     return [
         { key: 'profile',       href: '/profile',              label: { ar: 'الملف الشخصي',     en: 'Profile' } },
         { key: 'appointments',  href: '/appointments',         label: { ar: 'المواعيد',          en: 'Appointments' } },

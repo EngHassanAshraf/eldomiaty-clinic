@@ -2,8 +2,12 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  phone: string;
+  emailVerified: boolean;
+  phoneVerified: boolean;
   role: 'ADMIN' | 'USER';
   isPaid: boolean;
+  isActive: boolean;
 }
 
 export interface FileRecord {

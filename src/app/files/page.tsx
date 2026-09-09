@@ -9,8 +9,13 @@ import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import toast from 'react-hot-toast';
 import { Lock, FileText } from 'lucide-react';
 
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from '@/lib/i18n';
+
 export default function FilesPage() {
   const { accessToken, isLoading: authLoading } = useAuth();
+  const { locale } = useLocale();
+  const t = UI[locale];
   const router = useRouter();
   const [files, setFiles] = useState<FileRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +28,7 @@ export default function FilesPage() {
         const data = await filesApi.getFiles();
         setFiles(data);
       } catch (err) {
-        const msg = err instanceof ApiError ? err.message : 'فشل تحميل الملفات';
+        const msg = err instanceof ApiError ? err.message : t.filesLoadFailed;
         setError(msg);
         toast.error(msg);
       } finally {
@@ -37,11 +42,11 @@ export default function FilesPage() {
     <div className="min-h-screen bg-section-a section-padding">
       <div className="max-w-7xl mx-auto py-25 px-4 sm:px-6">
         <div className="section-header">
-          <span className="badge-rose">المحتوى الطبي</span>
+          <span className="badge-primary">{t.medicalContent}</span>
           <h1 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            الملفات <span className="text-grad-rose">المتاحة</span>
+            {t.availableFiles}
           </h1>
-          <div className="divider-rose" />
+          <div className="divider-primary" />
         </div>
 
         <ErrorBoundary>
@@ -52,7 +57,7 @@ export default function FilesPage() {
           ) : error ? (
             <div className="text-center py-12 text-[#8a6a6a]">{error}</div>
           ) : files.length === 0 ? (
-            <div className="text-center py-12 text-[#8a6a6a]">لا توجد ملفات متاحة حالياً</div>
+            <div className="text-center py-12 text-[#8a6a6a]">{t.noFilesFound}</div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {files.map((file) => (
@@ -77,7 +82,7 @@ export default function FilesPage() {
                   {file.isPaidContent && (
                     <div className="flex items-center gap-1.5 text-xs text-[#e8294a] font-medium">
                       <Lock size={12} />
-                      محتوى مدفوع
+                      {t.paidContent}
                     </div>
                   )}
                 </div>

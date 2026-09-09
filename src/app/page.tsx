@@ -9,7 +9,7 @@ import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
-import MobileCTA from "@/components/MobileCTA";
+// import MobileCTA from "@/components/MobileCTA";
 
 export default function Home() {
   return (

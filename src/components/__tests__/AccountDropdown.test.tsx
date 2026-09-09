@@ -16,6 +16,7 @@ describe('AccountDropdown', () => {
     );
 
     expect(html).toContain('Profile');
+    expect(html).toContain('href="/profile"');
     expect(html).toContain('Appointments');
     expect(html).toContain('Subscription Orders');
     expect(html).toContain('Logout');
@@ -34,6 +35,8 @@ describe('AccountDropdown', () => {
     );
 
     expect(html).toContain('Administrator');
+    expect(html).toContain('Profile');
+    expect(html).toContain('href="/profile"');
     expect(html).toContain('Dashboard');
     expect(html).toContain('Settings');
     expect(html).toContain('Logout');
@@ -50,6 +53,7 @@ describe('AccountDropdown', () => {
     );
 
     expect(html).toContain('الملف الشخصي');
+    expect(html).toContain('href="/profile"');
     expect(html).toContain('المواعيد');
     expect(html).toContain('طلبات الاشتراك');
     expect(html).toContain('تسجيل الخروج');
