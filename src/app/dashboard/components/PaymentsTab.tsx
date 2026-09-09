@@ -7,6 +7,8 @@ import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, paymentStatusClass } from
 import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
 import { Check, Eye, X } from 'lucide-react';
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from "@/lib/i18n";
 
 type ReviewAction = 'approve' | 'reject';
 
@@ -19,6 +21,9 @@ export default function PaymentsTab() {
   const [review, setReview] = useState<{ id: string; action: ReviewAction } | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
 
+  const { locale } = useLocale();
+  const t = UI[locale];
+
   const load = useCallback(async () => {
     if (!accessToken) return;
     try {
@@ -26,7 +31,7 @@ export default function PaymentsTab() {
       setRequests(data);
       setError(null);
     } catch (err) {
-      const msg = err instanceof ApiError ? err.message : 'فشل تحميل طلبات الدفع';
+      const msg = err instanceof ApiError ? err.message : t.paymentRequestsLoadFailed;
       setError(msg);
       toast.error(msg);
     } finally {
@@ -44,7 +49,7 @@ export default function PaymentsTab() {
       const { url } = await paymentRequestsApi.getScreenshotUrl(id);
       window.open(url, '_blank', 'noopener,noreferrer');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'فشل تحميل الصورة');
+      toast.error(err instanceof ApiError ? err.message : t.screenshotLoadFailed);
     }
   };
 
@@ -70,7 +75,7 @@ export default function PaymentsTab() {
           ? await paymentRequestsApi.approve(id, notes)
           : await paymentRequestsApi.reject(id, notes);
       setRequests((prev) => prev.map((r) => (r.id === id ? updated : r)));
-      toast.success(action === 'approve' ? 'تمت الموافقة على الطلب' : 'تم رفض الطلب');
+      toast.success(action === 'approve' ? t.requestApproved : t.requestRejected);
       setReview(null);
       setAdminNotes('');
     } catch (err) {
@@ -78,8 +83,8 @@ export default function PaymentsTab() {
         err instanceof ApiError
           ? err.message
           : action === 'approve'
-            ? 'فشلت الموافقة'
-            : 'فشل الرفض'
+            ? t.approveFailed
+            : t.rejectFailed
       );
     } finally {
       setActingId(null);
@@ -96,7 +101,7 @@ export default function PaymentsTab() {
 
   if (error) return <div className="text-center py-8 text-[#8a6a6a]">{error}</div>;
   if (requests.length === 0) {
-    return <div className="text-center py-8 text-[#8a6a6a]">لا توجد طلبات دفع</div>;
+    return <div className="text-center py-8 text-[#8a6a6a]">{t.noPaymentRequestsFound}</div>;
   }
 
   const isSubmitting = review !== null && actingId === review.id;
@@ -106,14 +111,14 @@ export default function PaymentsTab() {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-[#fad4db]/40">
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">المستخدم</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">طريقة الدفع</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">الحالة</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">التاريخ</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">ملاحظات</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">إجراءات</th>
-            </tr>
+              <tr className="border-b border-[#fad4db]/40">
+                <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.user}</th>
+                <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentMethod}</th>
+                <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentStatus}</th>
+                <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.date}</th>
+                <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.notes}</th>
+                <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.actions}</th>
+              </tr>
           </thead>
           <tbody>
             {requests.map((r) => (
@@ -146,7 +151,7 @@ export default function PaymentsTab() {
                       onClick={() => handleViewScreenshot(r.id)}
                       disabled={actingId === r.id}
                       className="text-[#8a6a6a] hover:text-[#e8294a] transition-colors disabled:opacity-50"
-                      title="عرض لقطة الشاشة"
+                       title={t.viewScreenshot}
                     >
                       <Eye size={16} />
                     </button>
@@ -157,7 +162,7 @@ export default function PaymentsTab() {
                           onClick={() => openReview(r.id, 'approve')}
                           disabled={actingId === r.id}
                           className="text-emerald-600 hover:text-emerald-700 transition-colors disabled:opacity-50"
-                          title="موافقة"
+                          title={t.approveAction}
                         >
                           <Check size={16} />
                         </button>
@@ -166,7 +171,7 @@ export default function PaymentsTab() {
                           onClick={() => openReview(r.id, 'reject')}
                           disabled={actingId === r.id}
                           className="text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
-                          title="رفض"
+                          title={t.rejectAction}
                         >
                           <X size={16} />
                         </button>
@@ -194,16 +199,18 @@ export default function PaymentsTab() {
             aria-labelledby="review-dialog-title"
           >
             <h3 id="review-dialog-title" className="text-lg font-black text-[#2d1a1a]">
-              {review.action === 'approve' ? 'تأكيد الموافقة' : 'تأكيد الرفض'}
+              {review.action === 'approve'
+                ? t.confirmApproval
+                : t.confirmRejection}
             </h3>
             <p className="text-sm text-[#8a6a6a] leading-relaxed">
               {review.action === 'approve'
-                ? 'سيتم تفعيل اشتراك المستخدم بعد الموافقة على الطلب.'
-                : 'سيتم رفض طلب الدفع. يمكنك إضافة سبب اختياري للمستخدم.'}
+                ? t.approvalWillActivateSubscription
+                : t.rejectionWillDeclineRequest}
             </p>
             <div className="space-y-2">
               <label htmlFor="admin-notes" className="text-sm font-semibold text-[#2d1a1a]">
-                ملاحظات الإدارة (اختياري)
+                {t.adminNotesOptional}
               </label>
               <textarea
                 id="admin-notes"
@@ -213,8 +220,8 @@ export default function PaymentsTab() {
                 rows={3}
                 placeholder={
                   review.action === 'approve'
-                    ? 'ملاحظة للمستخدم...'
-                    : 'سبب الرفض...'
+                    ? t.adminNotePlaceholder
+                    : t.rejectionReasonPlaceholder
                 }
                 className="w-full px-3 py-2.5 rounded-xl border border-[#fad4db]/60 bg-white text-sm text-[#2d1a1a] focus:outline-none focus:border-[#e8294a]/50 disabled:opacity-60 resize-none"
               />
@@ -231,10 +238,10 @@ export default function PaymentsTab() {
                 }`}
               >
                 {isSubmitting
-                  ? 'جارى التنفيذ...'
+                  ? t.executing
                   : review.action === 'approve'
-                    ? 'موافقة'
-                    : 'رفض'}
+                    ? t.approveAction
+                    : t.rejectAction}
               </button>
               <button
                 type="button"
@@ -242,7 +249,7 @@ export default function PaymentsTab() {
                 disabled={isSubmitting}
                 className="flex-1 btn-outline-rose py-2.5 text-sm disabled:opacity-60"
               >
-                إلغاء
+                {t.cancel}
               </button>
             </div>
           </div>

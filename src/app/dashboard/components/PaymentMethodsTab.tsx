@@ -11,6 +11,8 @@ import { PAYMENT_METHOD_LABELS } from '@/lib/payment/labels';
 import SkeletonList from '@/components/ui/SkeletonList';
 import toast from 'react-hot-toast';
 import { Pencil } from 'lucide-react';
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from "@/lib/i18n";
 
 type EditForm = {
   displayName: string;
@@ -49,6 +51,9 @@ export default function PaymentMethodsTab() {
   const [editing, setEditing] = useState<PaymentMethodSettingRecord | null>(null);
   const [form, setForm] = useState<EditForm | null>(null);
 
+  const { locale } = useLocale();
+  const t = UI[locale];
+
   const load = useCallback(async () => {
     if (!accessToken) return;
     setLoading(true);
@@ -57,7 +62,7 @@ export default function PaymentMethodsTab() {
       setMethods(data);
       setError(null);
     } catch (err) {
-      const msg = err instanceof ApiError ? err.message : 'فشل تحميل طرق الدفع';
+      const msg = err instanceof ApiError ? err.message : t.paymentMethodsLoadFailed;
       setError(msg);
       toast.error(msg);
     } finally {
@@ -83,17 +88,17 @@ export default function PaymentMethodsTab() {
   const handleSave = async () => {
     if (!accessToken || !editing || !form) return;
     if (!form.displayName.trim()) {
-      toast.error('اسم العرض مطلوب');
+      toast.error(t.paymentMethodDisplayNameRequired);
       return;
     }
     setSaving(true);
     try {
       const updated = await paymentMethodsApi.update(editing.method, toPayload(form));
       setMethods((prev) => prev.map((m) => (m.method === updated.method ? updated : m)));
-      toast.success('تم تحديث طريقة الدفع');
+      toast.success(t.paymentMethodUpdated);
       closeEdit();
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'فشل تحديث طريقة الدفع');
+      toast.error(err instanceof ApiError ? err.message : t.paymentMethodUpdateFailed);
     } finally {
       setSaving(false);
     }
@@ -109,7 +114,7 @@ export default function PaymentMethodsTab() {
 
   if (error) return <div className="text-center py-8 text-[#8a6a6a]">{error}</div>;
   if (methods.length === 0) {
-    return <div className="text-center py-8 text-[#8a6a6a]">لا توجد طرق دفع</div>;
+    return <div className="text-center py-8 text-[#8a6a6a]">{t.paymentMethodsNotFound}</div>;
   }
 
   return (
@@ -118,11 +123,11 @@ export default function PaymentMethodsTab() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[#fad4db]/40">
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">الطريقة</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">اسم العرض</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">رقم الحساب</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">الحالة</th>
-              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">إجراءات</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentMethod}</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentMethodDisplayName}</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentMethodAccountNumber}</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentMethodStatus}</th>
+              <th className="text-right py-3 px-4 font-semibold text-[#6b4c4c]">{t.paymentMethodActions}</th>
             </tr>
           </thead>
           <tbody>
@@ -141,7 +146,7 @@ export default function PaymentMethodsTab() {
                         : 'bg-gray-50 text-gray-600 border border-gray-200'
                     }`}
                   >
-                    {m.isActive ? 'نشط' : 'غير نشط'}
+                    {m.isActive ? t.paymentMethodActive : t.paymentMethodInactive}
                   </span>
                 </td>
                 <td className="py-3 px-4">
@@ -150,7 +155,7 @@ export default function PaymentMethodsTab() {
                     onClick={() => openEdit(m)}
                     disabled={saving}
                     className="text-[#8a6a6a] hover:text-[#e8294a] transition-colors disabled:opacity-50"
-                    title="تعديل"
+                    title={t.edit}
                   >
                     <Pencil size={16} />
                   </button>
@@ -174,12 +179,12 @@ export default function PaymentMethodsTab() {
             aria-modal="true"
           >
             <h3 className="text-lg font-black text-[#2d1a1a]">
-              تعديل {PAYMENT_METHOD_LABELS[editing.method]}
+              {t.edit} {PAYMENT_METHOD_LABELS[editing.method]}
             </h3>
             <div className="space-y-3">
               <div className="space-y-2">
                 <label htmlFor="displayName" className="text-sm font-semibold text-[#2d1a1a]">
-                  اسم العرض
+                  {t.paymentMethodDisplayName}
                 </label>
                 <input
                   id="displayName"
@@ -191,7 +196,7 @@ export default function PaymentMethodsTab() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="accountName" className="text-sm font-semibold text-[#2d1a1a]">
-                  اسم الحساب
+                  {t.paymentMethodAccountName}
                 </label>
                 <input
                   id="accountName"
@@ -203,7 +208,7 @@ export default function PaymentMethodsTab() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="accountNumber" className="text-sm font-semibold text-[#2d1a1a]">
-                  رقم الحساب
+                  {t.paymentMethodAccountNumber}
                 </label>
                 <input
                   id="accountNumber"
@@ -216,7 +221,7 @@ export default function PaymentMethodsTab() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="instructions" className="text-sm font-semibold text-[#2d1a1a]">
-                  التعليمات
+                  {t.paymentMethodInstructions}
                 </label>
                 <textarea
                   id="instructions"
@@ -235,7 +240,7 @@ export default function PaymentMethodsTab() {
                   disabled={saving}
                   className="w-4 h-4 accent-[#e8294a]"
                 />
-                نشط (يظهر للمستخدمين)
+                {t.paymentMethodActive}
               </label>
             </div>
             <div className="flex items-center gap-3 pt-1">
@@ -245,7 +250,7 @@ export default function PaymentMethodsTab() {
                 disabled={saving}
                 className="flex-1 btn-rose py-2.5 text-sm disabled:opacity-60"
               >
-                {saving ? 'جارى الحفظ...' : 'حفظ'}
+                {saving ? t.saving : t.save}
               </button>
               <button
                 type="button"
@@ -253,7 +258,7 @@ export default function PaymentMethodsTab() {
                 disabled={saving}
                 className="flex-1 btn-outline-rose py-2.5 text-sm disabled:opacity-60"
               >
-                إلغاء
+                {t.cancel}
               </button>
             </div>
           </div>

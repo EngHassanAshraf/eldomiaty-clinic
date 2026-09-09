@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Upload } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from '@/lib/i18n';
 import { paymentMethodsApi } from '@/lib/api/payment-methods';
 import { paymentRequestsApi } from '@/lib/api/payment-requests';
 import { ApiError, PaymentMethod, PaymentMethodSettingRecord } from '@/lib/api/types';
@@ -12,6 +14,8 @@ import Skeleton from '@/components/ui/Skeleton';
 
 export default function PaymentRequestPage() {
   const { accessToken } = useAuth();
+  const { locale } = useLocale();
+  const t = UI[locale];
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [methods, setMethods] = useState<PaymentMethodSettingRecord[]>([]);
@@ -26,7 +30,7 @@ export default function PaymentRequestPage() {
         setMethods(data);
         if (data.length > 0) setMethod(data[0].method);
       })
-      .catch(() => toast.error('فشل تحميل طرق الدفع'))
+      .catch(() => toast.error(t.paymentMethodsLoadFailed))
       .finally(() => setLoadingMethods(false));
   }, []);
 
@@ -40,15 +44,15 @@ export default function PaymentRequestPage() {
     }
     const file = fileInputRef.current?.files?.[0];
     if (!method) {
-      toast.error('اختر طريقة الدفع');
+      toast.error(t.selectPaymentMethod);
       return;
     }
     if (!file) {
-      toast.error('ارفع لقطة شاشة للتحويل');
+      toast.error(t.uploadPaymentScreenshot);
       return;
     }
     if (!file.type.startsWith('image/')) {
-      toast.error('يجب أن تكون الصورة بصيغة JPEG أو PNG أو WebP');
+      toast.error(t.imageFormatRequired);
       return;
     }
 
@@ -59,10 +63,10 @@ export default function PaymentRequestPage() {
     setSubmitting(true);
     try {
       await paymentRequestsApi.submit(formData);
-      toast.success('تم إرسال الطلب بنجاح');
+      toast.success(t.requestSubmittedSuccess);
       router.push('/payment/request/submitted');
     } catch (err) {
-      toast.error(err instanceof ApiError ? err.message : 'فشل إرسال الطلب');
+      toast.error(err instanceof ApiError ? err.message : t.requestSubmitFailed);
     } finally {
       setSubmitting(false);
     }
@@ -76,27 +80,26 @@ export default function PaymentRequestPage() {
           className="inline-flex items-center gap-2 text-sm text-[#8a6a6a] hover:text-[#e8294a] transition-colors mb-6"
         >
           <ArrowRight size={16} />
-          العودة إلى الملفات
+          {t.backToFiles}
         </Link>
 
         <form onSubmit={handleSubmit} className="card-base glass p-8 space-y-6">
           <div>
-            <h1 className="text-2xl font-black text-[#2d1a1a] mb-2">طلب تفعيل الاشتراك</h1>
+            <h1 className="text-2xl font-black text-[#2d1a1a] mb-2">{t.activateSubscriptionRequest}</h1>
             <p className="text-sm text-[#8a6a6a] leading-relaxed">
-              ادفع بإحدى الطرق المتاحة لدى العيادة، ثم ارفع لقطة شاشة للتحويل. سيراجع الطلب فريق
-              الإدارة ويفعّل اشتراكك بعد الموافقة.
+              {t.paymentInstructions}
             </p>
           </div>
 
           {loadingMethods ? (
             <Skeleton className="h-32" />
           ) : methods.length === 0 ? (
-            <p className="text-sm text-[#8a6a6a]">لا توجد طرق دفع متاحة حالياً.</p>
+            <p className="text-sm text-[#8a6a6a]">{t.noPaymentMethodsAvailable}</p>
           ) : (
             <>
               <div className="space-y-2">
                 <label htmlFor="method" className="text-sm font-semibold text-[#2d1a1a]">
-                  طريقة الدفع
+                  {t.paymentMethod}
                 </label>
                 <select
                   id="method"
@@ -115,8 +118,8 @@ export default function PaymentRequestPage() {
 
               {selected && (
                 <div className="text-sm text-[#6b4c4c] space-y-1 p-4 rounded-xl bg-[#fff8f9] border border-[#fad4db]/40">
-                  {selected.accountName && <p>اسم الحساب: {selected.accountName}</p>}
-                  {selected.accountNumber && <p dir="ltr">رقم الحساب: {selected.accountNumber}</p>}
+                  {selected.accountName && <p>{t.accountNameLabel} {selected.accountName}</p>}
+                  {selected.accountNumber && <p dir="ltr">{t.accountNumberLabel} {selected.accountNumber}</p>}
                   {selected.instructions && <p>{selected.instructions}</p>}
                 </div>
               )}
@@ -124,7 +127,7 @@ export default function PaymentRequestPage() {
               <div className="space-y-3 p-4 rounded-xl border border-dashed border-[#fad4db]/60 bg-[#fff8f9]/50">
                 <div className="flex items-center gap-2 text-[#8a6a6a] text-sm">
                   <Upload size={16} />
-                  رفع لقطة شاشة الدفع
+                  {t.uploadPaymentScreenshot}
                 </div>
                 <input
                   ref={fileInputRef}
@@ -140,7 +143,7 @@ export default function PaymentRequestPage() {
                 disabled={submitting || methods.length === 0}
                 className="btn-rose w-full py-3 disabled:opacity-60"
               >
-                {submitting ? 'جارى الإرسال...' : 'إرسال الطلب'}
+                {submitting ? t.submittingRequest : t.submitRequest}
               </button>
             </>
           )}

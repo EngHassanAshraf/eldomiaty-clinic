@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, CreditCard } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { useLocale } from '@/lib/LocaleContext';
+import { UI } from '@/lib/i18n';
 import { paymentRequestsApi } from '@/lib/api/payment-requests';
 import { ApiError, PaymentRequestRecord } from '@/lib/api/types';
 import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, paymentStatusClass } from '@/lib/payment/labels';
@@ -13,6 +15,8 @@ import toast from 'react-hot-toast';
 
 export default function MyPaymentRequestsPage() {
   const { accessToken, isLoading: authLoading } = useAuth();
+  const { locale } = useLocale();
+  const t = UI[locale];
   const router = useRouter();
   const [requests, setRequests] = useState<PaymentRequestRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +34,7 @@ export default function MyPaymentRequestsPage() {
         setRequests(data);
         setError(null);
       } catch (err) {
-        const msg = err instanceof ApiError ? err.message : 'فشل تحميل الطلبات';
+        const msg = err instanceof ApiError ? err.message : t.paymentRequestsLoadFailed;
         setError(msg);
         toast.error(msg);
       } finally {
@@ -57,9 +61,9 @@ export default function MyPaymentRequestsPage() {
       <div className="min-h-screen bg-section-b section-padding">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <div className="card-base glass p-8 text-center text-[#8a6a6a]">
-            <p className="mb-4">يجب تسجيل الدخول لعرض طلباتك</p>
+            <p className="mb-4">{t.loginToViewRequests}</p>
             <button onClick={() => router.push('/login')} className="btn-rose px-6 py-2">
-              تسجيل الدخول
+              {t.loginButton}
             </button>
           </div>
         </div>
@@ -75,13 +79,13 @@ export default function MyPaymentRequestsPage() {
           className="inline-flex items-center gap-2 text-sm text-[#8a6a6a] hover:text-[#e8294a] transition-colors mb-6"
         >
           <ArrowRight size={16} />
-          العودة إلى الملفات
+          {t.backToFiles}
         </Link>
 
         <div className="section-header mb-8">
-          <span className="badge-rose">الاشتراك</span>
+          <span className="badge-primary">{t.payments}</span>
           <h1 className="text-3xl sm:text-4xl font-black text-[#2d1a1a] mt-3 mb-2 tracking-tight">
-            طلبات <span className="text-grad-rose">الدفع</span>
+            {t.payments}
           </h1>
           <div className="divider-rose" />
         </div>
@@ -90,9 +94,9 @@ export default function MyPaymentRequestsPage() {
           <div className="card-base glass p-8 text-center text-[#8a6a6a]">{error}</div>
         ) : requests.length === 0 ? (
           <div className="card-base glass p-8 text-center space-y-4">
-            <p className="text-[#8a6a6a]">لم ترسل أي طلبات دفع بعد.</p>
+            <p className="text-[#8a6a6a]">{t.noPaymentRequestsYet}</p>
             <Link href="/payment/request" className="btn-rose inline-block px-6 py-2.5">
-              إرسال طلب جديد
+              {t.sendNewRequest}
             </Link>
           </div>
         ) : (
@@ -115,7 +119,7 @@ export default function MyPaymentRequestsPage() {
                       </span>
                     </div>
                     <p className="text-xs text-[#8a6a6a]">
-                      تاريخ الإرسال:{' '}
+                      {t.sentDate}:{' '}
                       {new Date(req.createdAt).toLocaleDateString('ar-EG', {
                         year: 'numeric',
                         month: 'long',
@@ -124,7 +128,7 @@ export default function MyPaymentRequestsPage() {
                     </p>
                     {req.adminNotes && (
                       <div className="text-sm text-[#6b4c4c] p-3 rounded-xl bg-[#fff8f9] border border-[#fad4db]/40">
-                        <span className="font-semibold text-[#2d1a1a]">ملاحظات الإدارة: </span>
+                        <span className="font-semibold text-[#2d1a1a]">{t.adminNotesLabel}: </span>
                         {req.adminNotes}
                       </div>
                     )}
