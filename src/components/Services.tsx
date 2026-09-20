@@ -6,15 +6,6 @@ import { CLINIC } from "@/lib/data";
 import { useLocale } from "@/lib/LocaleContext";
 import { UI, SERVICES_I18N, resources } from "@/lib/i18n";
 
-const FEATURED_KEYS = ["endoscopy", "icsi", "oncology", "highRiskPregnancy"] as const;
-
-const FEATURED_STYLES = [
-  { emoji: "🔬", bg: "bg-rose-50", border: "border-rose-200/60" },
-  { emoji: "💝", bg: "bg-amber-50", border: "border-amber-200/60" },
-  { emoji: "🏥", bg: "bg-emerald-50", border: "border-emerald-200/60" },
-  { emoji: "⚕️", bg: "bg-violet-50", border: "border-violet-200/60" },
-] as const;
-
 export default function Services() {
   const { locale } = useLocale();
   const t = UI[locale];
@@ -22,12 +13,6 @@ export default function Services() {
 
   const allCats = [t.catAll, ...t.cats];
   const [active, setActive] = useState<string>(t.catAll);
-
-  const featured = FEATURED_KEYS.map((key, i) => ({
-    key,
-    ...copy.services[key],
-    ...FEATURED_STYLES[i],
-  }));
 
   const filtered =
     active === t.catAll
@@ -52,23 +37,10 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-12">
-          {featured.map((service) => (
-            <div
-              key={service.key}
-              className={`${service.bg} border ${service.border} rounded-xl p-5 text-start h-full cursor-default transition-colors duration-200 hover:border-[#E91E63]/40`}
-            >
-              <div className="text-2xl mb-2">{service.emoji}</div>
-              <p className="text-sm font-semibold text-[#2d1a1a] mb-1.5">{service.title}</p>
-              <p className="text-xs text-[#6b7280] leading-relaxed">{service.description}</p>
-            </div>
-          ))}
-        </div>
-
         {/* Filter tabs with background image */}
         <div className="relative rounded-2xl overflow-hidden mb-10 min-h-[220px] sm:min-h-[280px] flex items-center justify-center shadow-subtle">
           <Image
-            src="/services-image.jpg"
+            src="/images/services-image.jpg"
             alt=""
             fill
             className="object-cover"

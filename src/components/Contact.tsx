@@ -87,7 +87,7 @@ export default function Contact() {
           <div className="relative rounded-2xl overflow-hidden border border-[#E91E63]/20 text-center shadow-md">
             {/* Background image */}
             <Image
-              src="/reserve-now.webp"
+              src="/images/reserve-now.webp"
               alt=""
               fill
               className="object-cover"
@@ -101,7 +101,7 @@ export default function Contact() {
               {/* Doctor avatar */}
               <div className="w-20 h-20 mx-auto mb-5 rounded-full overflow-hidden ring-4 ring-white/30 shadow-lg">
                 <Image
-                  src="/pi2.png"
+                  src="/images/pi2.jpg"
                   alt={t.doctorName}
                   width={80}
                   height={80}

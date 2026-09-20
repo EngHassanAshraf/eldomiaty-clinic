@@ -83,7 +83,7 @@ export default function Navbar() {
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group" aria-label={CLINIC.name}>
             <div className="relative w-20 h-20 rounded-full overflow-hidden ring-2 ring-[#E91E63]/20 group-hover:ring-[#E91E63]/50 transition-all duration-200">
-              <Image src="/new-logo.png" alt={`شعار ${CLINIC.name}`} fill className="object-contain" priority />
+              <Image src="/images/new-logo.png" alt={`شعار ${CLINIC.name}`} fill className="object-contain" priority />
             </div>
             <div className="sm:block leading-tight">
               <p className="text-sm font-bold text-gray-800 group-hover:text-[#E91E63] transition-colors duration-200">

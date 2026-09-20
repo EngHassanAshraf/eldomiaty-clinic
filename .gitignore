@@ -25,3 +25,7 @@ docs/
 # TypeScript
 *.tsbuildinfo
 tsconfig.tsbuildinfo
+
+# Agents Files
+.kilo
+.claude

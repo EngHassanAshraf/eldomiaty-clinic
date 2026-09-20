@@ -22,7 +22,7 @@ async function main() {
     where: { email: ADMIN_EMAIL },
     update: {},
     create: {
-      name: "El-Domiaty Admin",
+      name: "Eldomiaty Admin",
       email: ADMIN_EMAIL,
       phone: PAYMENT_NUMBER,
       emailVerified: true,

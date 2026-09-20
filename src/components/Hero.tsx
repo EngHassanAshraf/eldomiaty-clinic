@@ -41,7 +41,9 @@ export default function Hero() {
               <h1 className="text-4xl sm:text-5xl lg:text-[3.2rem] font-black text-[#2d1a1a] leading-[1.15] tracking-tight">
                 {heroTitleAccent ? (
                   <>
+                  <span className="text-grad-secondary">
                     {heroTitleLead}
+                  </span>
                     <br />
                     <span className="text-grad-primary">{heroTitleAccent}</span>
                   </>
@@ -49,7 +51,7 @@ export default function Hero() {
                   copy.hero.title
                 )}
               </h1>
-              <p className="text-base text-[#6b7280] leading-[1.8] max-w-lg">{copy.hero.subtitle}</p>
+              <p className="text- font-medium text-grad-secondary leading-[1.8] max-w-lg">{copy.hero.subtitle}</p>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -82,10 +84,10 @@ export default function Hero() {
 
           {/* Doctor image column */}
           <div className="relative flex justify-center order-1 lg:order-2">
-            <div className="relative w-full max-w-sm">
+            <div className="relative w-full max-w-md lg:max-w-lg">
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-[#FCE4EC]">
                 <Image
-                  src="/doctor-img.jpg"
+                  src="/images/doctor-img.jpg"
                   alt={`${t.doctorName} — ${t.specialty}`}
                   width={480} height={560} priority
                   className="w-full h-auto object-cover"
@@ -96,7 +98,7 @@ export default function Hero() {
                     if (p) { p.style.background = "linear-gradient(135deg,#E91E63,#F06292)"; p.style.minHeight = "400px"; }
                   }}
                 />
-                <div className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-sm px-5 py-4 border-t border-gray-100">
+                <div className="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-sm px-5 py-1 border-t border-gray-100">
                   <p className="font-black text-[#2d1a1a] text-base">{t.doctorName}</p>
                   <p className="text-xs text-[#6b7280] mt-0.5">{t.doctorSub}</p>
                   <div className="flex gap-0.5 mt-1.5">

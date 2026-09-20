@@ -31,7 +31,7 @@ export default function Footer() {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-white p-1">
-                <Image src="/new-logo.png" alt={`شعار ${CLINIC.name}`} fill className="object-contain" />
+                <Image src="/images/new-logo.png" alt={`شعار ${CLINIC.name}`} fill className="object-contain" />
               </div>
               <div>
                 <p className="font-black text-white">{locale === "ar" ? "د. محمد الدمياطي" : "Dr. Mohamed Eldomiaty"}</p>

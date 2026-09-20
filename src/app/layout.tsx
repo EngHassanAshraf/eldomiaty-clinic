@@ -56,7 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="ar" dir="rtl">
       <head>
-        <link rel="icon" href="/favicon-transparence-bg.jpg" type="image/jpg" />
+        <link rel="icon" href="/favicon/favicon-transparence-bg.jpg" type="image/jpg" />
         <SchemaOrg />
         {/* Facebook Pixel */}
         <script

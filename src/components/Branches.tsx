@@ -1,4 +1,6 @@
 "use client";
+import dynamic from "next/dynamic";
+import { useCallback, useRef, useState } from "react";
 import { MapPin, Phone, MessageCircle } from "lucide-react";
 import Image from "next/image";
 
@@ -13,9 +15,25 @@ const ACCENTS = [
   { top: "bg-violet-500",  icon: "bg-linear-to-br from-violet-400 to-purple-500" },
 ];
 
+const ClinicMap = dynamic(() => import("@/components/ClinicMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[360px] w-full rounded-2xl animate-pulse bg-[#faf7f5]" aria-label="Loading map" />
+  ),
+});
+
 export default function Branches() {
   const { locale } = useLocale();
   const t = UI[locale];
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
+
+  const handleLocationSelect = useCallback((id: number) => {
+    setSelectedId(id);
+    window.requestAnimationFrame(() => {
+      cardRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, []);
 
   return (
     <section id="branches" className="section-padding bg-section-a">
@@ -29,12 +47,35 @@ export default function Branches() {
           <p className="text-[#6b7280] mt-4 text-sm">{t.branchesDesc}</p>
         </div>
 
+        <div className="mb-8">
+          <ClinicMap selectedId={selectedId} onSelect={handleLocationSelect} />
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {BRANCHES_I18N.map((branch, i) => {
             const a = ACCENTS[i % 4];
             const b = branch[locale];
             return (
-              <div key={branch.id} className="card-base overflow-hidden">
+              <div
+                key={branch.id}
+                ref={(node) => { cardRefs.current[branch.id] = node; }}
+                tabIndex={0}
+                role="button"
+                aria-pressed={selectedId === branch.id}
+                aria-label={`${b.name}: ${b.address}`}
+                onClick={() => handleLocationSelect(branch.id)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    handleLocationSelect(branch.id);
+                  }
+                }}
+                className={`card-base overflow-hidden cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#E91E63] focus:ring-offset-2 ${
+                  selectedId === branch.id
+                    ? "ring-2 ring-[#E91E63] shadow-card"
+                    : "hover:shadow-card"
+                }`}
+              >
                 <div className={`h-1 ${a.top}`} />
                 <div className="p-6 flex flex-col justify-between h-full">
                   <div className="w-full flex items-center mb-2">
@@ -45,6 +86,7 @@ export default function Branches() {
                   </div>
                   <p className="mb-2 text-sm text-[#6b7280] leading-relaxed">{b.address}</p>
                   <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer"
+                    onClick={(event) => event.stopPropagation()}
                     className="flex items-center gap-1.5 text-sm font-semibold text-[#E91E63] hover:text-[#C2185B] transition-colors">
                     <MapPin size={13} />{t.bookBranch}
                   </a>
@@ -57,7 +99,7 @@ export default function Branches() {
         <div className="relative rounded-2xl mt-10 overflow-hidden shadow-subtle">
           {/* Background image */}
           <Image
-            src="/contact-us.png"
+            src="/images/contact-us.png"
             alt=""
             fill
             className="object-cover"

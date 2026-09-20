@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "test": "vitest run",
+    "lint": "next lint",
     "start": "next start",
     "db:seed": "prisma db seed"
   },
@@ -15,20 +17,23 @@
     "@prisma/client": "^6.19.0",
     "@supabase/supabase-js": "^2.108.1",
     "jose": "^6.2.2",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.511.0",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hot-toast": "^2.6.0"
+    "react-hot-toast": "^2.6.0",
+    "react-leaflet": "^5.0.0",
+        "bcryptjs": "^3.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
+    "@types/leaflet": "^1.9.12",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/ui": "^4.1.4",
     "autoprefixer": "^10.4.0",
-    "bcryptjs": "^3.0.2",
     "eslint": "^10.7.0",
     "fast-check": "^4.6.0",
     "postcss": "^8.4.0",
