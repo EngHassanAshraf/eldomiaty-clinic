@@ -26,8 +26,9 @@ export default function SchemaOrg() {
             addressLocality: "المهندسين",
             addressRegion: "القاهرة",
             addressCountry: "EG",
-            streetAddress: "43 شارع سوريا بجوار لابور",
+            streetAddress: "53 ش عبدالمُنعم رياض Notion Medical Tower الدور السادس عيادة 606",
           },
+          
           {
             "@type": "PostalAddress",
             addressLocality: "مدينة نصر",

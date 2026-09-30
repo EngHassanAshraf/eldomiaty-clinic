@@ -20,7 +20,7 @@ const SERVICE_STYLES = [
 const ClinicMap = dynamic(() => import("@/components/ClinicMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-[360px] w-full animate-pulse bg-[#faf7f5]" aria-label="Loading map" />
+    <div className="h-90 w-full animate-pulse bg-[#faf7f5]" aria-label="Loading map" />
   ),
 });
 
@@ -85,7 +85,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="rounded-2xl  h-full">
+          <div className="rounded-2xl overflow-hidden shadow-subtle">
             <ImageGallery />
           </div>
         </div>
@@ -115,15 +115,6 @@ export default function About() {
             <p className="text-sm text-grad-secondary leading-relaxed">{copy.vision.description}</p>
           </div>
 
-          <a
-            href={CLINIC.whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-secondary gap-2 w-full sm:w-auto justify-center"
-          >
-            <MessageCircle size={18} />
-            {t.cta}
-          </a>
         </div>
       </div>
     </section>

@@ -11,7 +11,7 @@ export const STATS_I18N = [
 
 export const BRANCHES_I18N = [
   { id: 1, icon: "🏥", ar: { name: "التجمع الخامس",  address: "كايرو ميديكال سنتر خلف المستشفى الجوى - شارع التسعين الشمالى" }, en: { name: "New Cairo (Fifth Settlement)", address: "Cairo Medical Center, behind Air Force Hospital, North 90th St." } },
-  { id: 2, icon: "🏥", ar: { name: "المهندسين",       address: "43 شارع سوريا بجوار لابور" },                          en: { name: "Mohandessin",       address: "43 Syria St., next to Labor Hospital" } },
+  { id: 2, icon: "🏥", ar: { name: "المهندسين",       address: "53 ش عبدالمُنعم رياض، Notion Medical Tower، الدور السادس، عيادة 606" },                          en: { name: "Mohandessin",       address: "Clinic 606, 6th Floor, Notion Medical Tower, 53 Abdel Moneim Riad Street" } },
   { id: 3, icon: "🏥", ar: { name: "مدينة نصر",       address: "40 شارع عباس العقاد أمام كوستا كافية" },                en: { name: "Nasr City",         address: "40 Abbas El-Akkad St., opposite Costa Café" } },
   { id: 4, icon: "🏥", ar: { name: "مدينتى",          address: "ميديكال سنتر 1 مدينتى" },                                         en: { name: "Madinaty",          address: "Medical Center 1, Madinaty" } },
 ];
@@ -128,7 +128,7 @@ export const UI = {
     testimonialsTitle: "آراء من ",
     testimonialsHighlight: "وثقوا بنا",
     testimonialsDesc: "آراء حقيقية من زوار وثقوا بنا في أهم لحظات حياتهم",
-    patient: "مريضة",
+    patient: "حالة",
     prevReview: "التقييم السابق",
     nextReview: "التقييم التالى",
     page: "الصفحة",
@@ -748,7 +748,7 @@ export const resources = {
         oncology: {
           title: "أورام النساء وجراحاتها",
           description:
-            "تخصص دقيق في الكشف المبكر والتعامل الجراحي والتحفظي الآمن مع الأورام الليفية والسرطانية، مع الحفاظ الكامل على سلامة وصحة المريضة وصحتها الإنجابية.",
+            "تخصص دقيق في الكشف المبكر والتعامل الجراحي والتحفظي الآمن مع الأورام الليفية والسرطانية، مع الحفاظ الكامل على سلامة وصحة الحالة وصحتها الإنجابية.",
         },
         highRiskPregnancy: {
           title: "رعاية الحمل الحرج والولادة بدون ألم",

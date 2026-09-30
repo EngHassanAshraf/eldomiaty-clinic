@@ -5,9 +5,7 @@ import Image from "next/image";
 import { useLocale } from "@/lib/LocaleContext";
 import { UI } from "@/lib/i18n";
 
-const VIDEO_ID = "2836039979809822";
-const FB_EMBED = `https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%2F%3Fv%3D${VIDEO_ID}&show_text=0&width=560`;
-const FB_WATCH = `https://www.facebook.com/watch/?v=${VIDEO_ID}`;
+const FB_WATCH = "https://www.facebook.com/watch/?v=2836039979809822";
 
 export default function VideoSection() {
   const { locale } = useLocale();
@@ -52,13 +50,13 @@ export default function VideoSection() {
         </div>
 
         <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center bg-white/90 backdrop-blur-sm rounded-xl px-3 gap-3 px-3 py-2 shadow-subtle">
+          <div className="flex items-center bg-white/90 backdrop-blur-sm rounded-xl gap-3 px-3 py-2 shadow-subtle">
             <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
               <Image src="/images/pi2.jpg" alt={t.doctorName} width={40} height={40} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col ">  
-              <p className="text-sm font-bold text-[#2d1a1a]">{t.doctorName}</p>
-              <p className="text-xs text-[#6b7280]">{t.doctorSub}</p>
+              <p className="text-sm font-bold text-grad-secondary">{t.doctorName}</p>
+              <p className="text-xs text-grad-primary">{t.doctorSub}</p>
             </div>
           </div>
         </div>

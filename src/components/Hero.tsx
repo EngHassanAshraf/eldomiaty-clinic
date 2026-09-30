@@ -33,7 +33,6 @@ export default function Hero() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-35 pb-20 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* Text column */}
           <div className="space-y-7 order-2 lg:order-1">
             <div className="badge-primary w-fit animate-fade-up">{t.specialty}</div>
 
@@ -63,11 +62,11 @@ export default function Hero() {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary gap-2 text-base">
+            <div className="flex flex-wrap gap-1">
+              <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-whatsapp text-base">
                 <MessageCircle size={18} />{t.ctaFull}
               </a>
-              <a href={`tel:${CLINIC.phone}`} className="btn-outline gap-2 text-base">
+              <a href={`tel:${CLINIC.phone}`} className="btn-outline text-base">
                 <Phone size={18} />{t.callUs}
               </a>
             </div>
@@ -82,7 +81,6 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Doctor image column */}
           <div className="relative flex justify-center order-1 lg:order-2">
             <div className="relative w-full max-w-md lg:max-w-lg">
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-[#FCE4EC]">

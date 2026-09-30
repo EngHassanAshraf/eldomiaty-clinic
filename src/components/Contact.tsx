@@ -111,11 +111,11 @@ export default function Contact() {
               <h3 className="text-xl font-black text-white mb-2">{t.bookNow}</h3>
               <p className="text-white/80 text-sm mb-6 leading-relaxed">{t.bookDesc}</p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-secondary gap-2">
-                  <MessageCircle size={18} />{t.ctaFull}
+                <a href={CLINIC.whatsappLink} target="_blank" rel="noopener noreferrer" className="btn-whatsapp gap-2">
+                  <MessageCircle size={18} />{t.whatsapp}
                 </a>
                 <a href={`tel:${CLINIC.phone}`}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white border-2 border-white/60 hover:bg-white/15 transition-all duration-200">
+                  className="btn-secondary gap-2">
                   <Phone size={18} />{t.callUs}
                 </a>
               </div>
